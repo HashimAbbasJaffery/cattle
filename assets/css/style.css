@@ -334,6 +334,9 @@ body {
 .mobile-animals {
     display: none;
 }
+.animals {
+    display: block;
+}
   @media only screen and (max-width: 600px) {
     .mobile-animals {
         display: block;
@@ -499,6 +502,12 @@ body {
         background: #ebe8e2;
         margin-right: 10px;
     }
+    .mobile-animal {
+        display: flex;
+    }
+    .animals {
+        display: none;
+    }
     .mobile-animal h1 {
         font-size: 15px !important;
         font-weight: 500;
@@ -526,5 +535,13 @@ body {
   @media only screen and (max-width: 398px) {
     .mobile-filter-list {
         width: 55%;
+    }
+  }
+  @media only screen and (max-width: 378px) {
+    .mobile-filter-list {
+        width: 55%;
+    }
+    .mobile-categories {
+        font-size: 6px !important;
     }
   }
