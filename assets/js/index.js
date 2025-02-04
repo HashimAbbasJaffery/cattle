@@ -44,8 +44,9 @@ filter_button.addEventListener("click", function() {
 })
 
 
+const modal = document.querySelector(".modal");
 window.addEventListener("click", function(event) {
-    const excludedElements = document.querySelectorAll(".mobile-filter-list, .mobile-filter");
+    const excludedElements = document.querySelectorAll(".mobile-filter-list, .mobile-filter, .animal-gallery");
     
     for (let element of excludedElements) {
         if (element.contains(event.target)) {
@@ -54,6 +55,7 @@ window.addEventListener("click", function(event) {
     }
 
     filter_list.classList.remove("mobile-show")
+    modal.classList.add("none")
 })
 
 filter_items.forEach(item => {
@@ -78,3 +80,32 @@ items.forEach(item => {
         main_content.textContent = content;
     })
 })
+
+
+
+//  let holdTimer;
+
+//     document.querySelectorAll(".mobile-animal").forEach((element) => {
+//         element.addEventListener("touchstart", startHold);
+//         element.addEventListener("touchend", cancelHold);
+//         element.addEventListener("touchmove", cancelHold); // Cancels hold if user moves finger
+//     });
+
+//     function startHold(event) {
+//         holdTimer = setTimeout(() => {
+//             modal.classList.remove("none")
+//         }, 1000); // 2 seconds hold time
+//     }
+
+//     function cancelHold() {
+//         clearTimeout(holdTimer);
+//     }
+
+
+    document.querySelectorAll('.mobile-animal').forEach((el, index) => {
+        setTimeout(() => {
+            el.style.opacity = 1;
+            el.style.transform = 'translateX(0)';
+            el.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+        }, index * 300); // Delay increases for each element
+    });
