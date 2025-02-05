@@ -6,7 +6,31 @@
     <title>Cattle | Home</title>
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <link href="./assets/css/output.css" rel="stylesheet" />
-    
+    <style>
+        @media only screen and (max-width: 600px) {
+            
+            .search-bar {
+                display: none;
+            }
+            .logo-container {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            .single-cow {
+                margin-top: 0px !important;
+            }
+            .cow-id {
+                border-bottom-right-radius: 40px !important;
+                border-bottom-left-radius: 40px !important;
+            }
+            .cow-images {
+                display: none;
+            }
+            header, .website-header {
+                border-radius: 0px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="bg-primary website-header rounded-b-xl">
@@ -49,7 +73,25 @@
                     <div class="cow-id bg-green" style="border-bottom-right-radius: 20px;">
                         <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">ID: 000-000-000</p>
                     </div>
+                    <div class="mobile-containers relative" style="padding-left: 20px;">
+                        <div class="mobile-left-container">
+                            <h1>Rani</h1>
+                            <p class="mobile-price">PKR 1,000,000/-</p>
+                            <div class="live-weight flex items-center">
+                                <p class="mr-5">420kg live weight</p>
+                                <div class="flex items-center">
+                                    <i class="pr-1 fa fa-circle text-danger-glow blink mr-4" style="font-size: 15px;margin-right: 0px;"></i>
+                                    <img src="./assets/images/weight.png" style="width: 20px;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-right-container absolute right-0 bg-green bottom-0 p-2" style="border-bottom-left-radius: 10px; border-top-left-radius: 10px;">
+                            <h1 style="color: white;">Easy installment</h1>
+                            <p style="color: white;">plans are also available</p>
+                        </div>
+                    </div>
                 </div>
+                <div style="height: 15px;">&nbsp;</div>
                 <div class="cow-images flex gap-2 px-3 mt-3">
                     <div class="cow-image rounded-md" style="width: 50px; height: 50px; background-image: url('./assets/images/cow.jpg'); background-size: cover; background-position: -15px 0px;"></div>
                     <div class="cow-image rounded-md" style="width: 50px; height: 50px; background-image: url('./assets/images/cow.jpg'); background-size: cover; background-position: -15px 0px;"></div>
@@ -85,6 +127,74 @@
                             <div class="flex justify-between items-center">
                                 <p class="order-1">Clean water</p>
                                 <img src="./assets/images/droplet.png" class="mr-3" width="25">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="facilitations-and-description bg-cream flex items-start" style="padding-left: 20px;">
+                    <div class="descriptions" style="width: 50%;">
+                        <div class="description-header" style="padding-bottom: 10px;">
+                            <div class="flex justify-between">
+                                <p>Breed</p>
+                                <p>Brahmand</p>
+                            </div>
+                            <div class="flex justify-between">
+                                <p>Gender</p>
+                                <p>Female</p>
+                            </div>
+                            <div class="flex justify-between">
+                                <p>Age</p>
+                                <p>3 Teeth</p>
+                            </div>
+                        </div>
+                        <div id="description">
+                            <h1 style="font-weight: 500; text-transform: uppercase; margin-bottom: 3px; font-size: 3vw;">Description:</h1>
+                            <p style="font-size: 2vw;">
+                                VG Farm animals are raised in optimal conditions, receiving premium 
+                                VG feed for their nutritional needs. Vaccinated against FMD, HS, LSD,
+                                and BQ, they thrive under expert care.An on-site veterinarian ensures 
+                                health and well-being. At VG Mills and Farm, we deliver top quality 
+                                livestock to our valued customers.
+                            </p>
+                        </div>
+                        <div id="desclaimer" style="margin-top: 10px;">
+                            <h1 style="font-weight: 500; text-transform: uppercase; margin-bottom: 10px; font-size: 3vw; ">Desclaimer:</h1>
+                            <p style="font-size: 2vw;">
+                                Running a cattle operation comes with various challenges that may 
+                                impact the...<span style="color: #5380cf;">read more</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mobile-facilitations" style="width: 50%;">
+                        <h1>
+                            VG Cattle Farm
+                            <br>
+                            Premium Facilitations
+                        </h1>
+                        <div class="facility-list" style="padding-right: 10px;">
+                            <div class="flex justify-between items-center">
+                                <p>Premium VG feed</p> 
+                                <img style="width: 15px;" src="./assets/images/food.png">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p>24/7 Veterinary Doctor</p> 
+                                <img style="width: 15px;" src="./assets/images/ambulance.png">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p>Professional Staff</p> 
+                                <img style="width: 15px;" src="./assets/images/buesinessman.png">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p>Complete Vaccination</p> 
+                                <img style="width: 15px;" src="./assets/images/vaccination.png">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p>Clean Environment</p> 
+                                <img style="width: 15px;" src="./assets/images/clean.png">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p>Clean Water</p> 
+                                <img style="width: 15px;" src="./assets/images/droplet.png">
                             </div>
                         </div>
                     </div>
@@ -141,7 +251,7 @@
             </div>
         </section>
         <section id="more" class="container w-full" style="margin-bottom: 1%;">
-            <h1>More Like this</h1>
+            <h1 style="padding-left: 20px">More Like this</h1>
             <swiper-container class="animals flex justify-between" loop="true"  slides-per-view="4" style="width: 100%;">
                 <swiper-slide style="width: 100%; margin-top: 10px !important;">
                     <div class="animal flex grid mr-3" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px; width: 95%;">
@@ -415,7 +525,7 @@
                 </swiper-slide>
             </swiper-container>
         </section>
-        <section id="buttons" class="container mx-auto z-1" style="background: white; padding-top: 10px; padding-bottom: 10px;">
+        <!-- <section id="buttons" class="container mx-auto z-1" style="background: white; padding-top: 10px; padding-bottom: 10px;">
             <div class="purchase flex mb-3 gap-2">
                 <button class="bg-green w-1/2 p-2 rounded-full" style="color: white;">Cash</button>
                 <button class="bg-green w-1/2 rounded-full" style="color: white;">Installment</button>
@@ -423,7 +533,7 @@
             <div class="contact">
                 <button class="bg-green w-full p-2 rounded-full" style="color: white;">Whatsapp</button>
             </div>
-        </section>
+        </section> -->
     </main>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
    <script src="./assets/js/index.js"></script>

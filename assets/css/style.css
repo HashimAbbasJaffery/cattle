@@ -284,16 +284,16 @@ body {
 }
 .description h1,
 .disclaimer h1 {
-    font-size: 24px;
+    font-size: 10px;
     text-transform: uppercase;
     margin-top: 20px;
 }
 .disclaimer h1 {
-    margin-top: 15px;
+    margin-top: 10px;
 }
 .description p,
 .disclaimer p {
-    font-size: 14px;
+    font-size: 10px;
     line-height: 18px;
 }
 .disclaimer p a {
@@ -341,8 +341,42 @@ body {
     background: rgba(255, 255, 255, 0.7); /* Green with opacity */
     backdrop-filter: blur(10px); /* Apply blur */
 }
+.mobile-pagination .pagination{
+    background: #f2f0ee;
+    border: 1px solid #b6b1a9;
+    padding: 5px 10px 5px 10px;
+    margin-right: 10px;
+    text-align: center;
+    border-radius: 5px;
+}
+.mobile-pagination .pagination{
+    background: #f2f0ee;
+    border: 1px solid #b6b1a9;
+    padding: 5px 10px 5px 10px;
+    margin-right: 10px;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 5px;
+}
+.mobile-pagination .pagination:not(.active) {
+    transform: scale(0.7) !important;
+    opacity: 0.4;
+}
+.mobile-pagination {
+    display: none;
+}
+.mobile-pagination .pagination:not(.active) {
+    transform: scale(0.7) !important;
+    opacity: 0.4;
+}
+.mobile-containers {
+    display: none;
+}
   @media only screen and (max-width: 600px) {
     .mobile-animals {
+        display: block;
+    }
+    .mobile-pagination {
         display: block;
     }
     .animals {
@@ -531,7 +565,6 @@ body {
         justify-content: space-between !important;
     }
     .category-separator {
-        border: 1px solid #cccac5;
         height: 90px !important;
     }
     .search-field,
@@ -567,12 +600,103 @@ body {
         -moz-user-select: none;
         -ms-user-select: none;
     }
-    
+
+    .breadcrumbs {
+        display: none !important;
+    }
 
     /* SINGLE.html */
-
+    .container {
+        display: block;
+    }
     .left-container {
         width: 100%;
+    }
+
+    /* TEMPORARY */
+
+    /* TEMPORARY */
+
+    .mobile-left-container {
+        line-height: 25px;
+    }
+
+    .mobile-left-container h1 {
+        font-size: 5.5vw;
+        font-weight: 500;
+        margin-top: 30px;
+    }
+    .mobile-left-container {
+        width: 100%;
+    }
+    .mobile-right-container {
+        font-size: 3.5vw;
+    }
+    .mobile-price {
+        font-size:  5.5vw;
+        font-weight: 500;
+    }
+    .live-weight p {
+        font-size: 3.5vw;
+    }
+    .mobile-right-container {
+        padding-right: 30px;
+        padding-left: 15px;
+    }
+    .mobile-right-container h1 {
+        font-size: 15px;
+    }
+    .mobile-right-container p {
+        font-size: 10.5px;
+    }
+    .mobile-containers {
+        display: block;
+    }
+    .facilitations {
+        display: none;
+    }
+    .description-header {
+        font-size: 13px;
+        padding-top: 15px;
+        line-height: 25px;
+        padding-bottom: 20px;
+    }
+
+    .mobile-facilitations {
+        padding-left: 15px;
+        padding-top: 20px;
+        background-color: #f1ece4;
+        margin-left: 10px;
+    }
+
+    .mobile-facilitations h1 {
+        font-size: 3.5vw;
+        font-weight: 500;
+    }
+    .facility-list {
+        margin-top: 15px;
+    }
+    .facility-list p {
+        font-size: 1.5vh;
+    }
+    .facility-list div {
+        margin-bottom: 10px;
+    }
+
+    swiper-container, swiper-slide {
+       display: block !important;
+    }
+
+    .mobile-animal:hover {
+        transform: scale(1.035) !important;
+    }
+
+    .right-container {
+        display: none;
+    }
+
+    #more {
+        display: none;
     }
   }
   @media only screen and (max-width: 450px) {
