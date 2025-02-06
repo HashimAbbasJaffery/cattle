@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get("/testing", function() {
+    $animals = Animal::get();
+    return view("index", compact("animals"));
 });
 
 Route::get('/dashboard', function () {

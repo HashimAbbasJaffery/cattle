@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean("gender")->default(0); // 0 Male, 1 Female
             $table->boolean("availability")->default(0);
             $table->string("slug");
+            $table->float("price");
             $table->timestamps();
         });
     }
