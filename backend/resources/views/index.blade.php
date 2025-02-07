@@ -298,16 +298,7 @@
                 @endforeach
             </div>
         </section>
-        <section id="pagination">
-            <div style="padding-left: 10px; text-align: center;" class="mobile-pagination mt-4 mb-3">
-                <a href="#" class="pagination inline-block arrows">&lt;</a>
-                <a href="#" class="pagination inline-block">1</a>
-                <a href="#" class="pagination inline-block active">2</a>
-                <a href="#" class="pagination inline-block ">3</a>
-                <a href="#" class="pagination inline-block ">4</a>
-                <a href="#" class="pagination inline-block ">5</a>
-            </div>
-        </section>
+        {{ $animals->links('vendor.pagination.cattle') }}
     </main>
 
     @push('scripts')

@@ -408,10 +408,11 @@
                 <p class="flex justify-between"><span>Age:</span> {{ $animal->age->age }}</p>
                 <h1>Pricing</h1>
                 <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100) }}/-</p>
-                <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + installment + '/-'"></span></p>
-                <p class="flex justify-between"><span>Monthly Fee:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
+                <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + ((this.originalPrice / this.months) + this.getPercentageOf(this.originalPrice, this.events.filter(event => event.months == months)[0].percentage)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/month'"></span></p>
+                <p class="flex justify-between" v-if="is_cash"><span>Monthly Fee:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
                 <p class="flex justify-between" style="border-bottom: 1px solid grey; padding-bottom: 10px; margin-bottom: 10px;"><span>Duration:</span> <span v-text="months + ' Months'"></span></p>
-                <p class="flex justify-between" style="font-weight: bold;"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((maintenance * months) + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((maintenance * months) + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <p class="flex justify-between" style="font-weight: bold;" v-else><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + (((this.originalPrice / this.months) + this.getPercentageOf(this.originalPrice, this.events.filter(event => event.months == months)[0].percentage)) * months).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
             </div>
         </section>
         <section id="buttons" class="container mx-auto z-1" style="background: white; padding-top: 10px; padding-bottom: 10px;">
@@ -441,11 +442,9 @@
                     price: '{{ $animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100 }}',
                     maintenance: '{{ $animal->maintenance_fee }}',
                     installment: null,
-                    percentage: '{{ $setting->add_if_above_criteria }}'
+                    percentage: '{{ $setting->add_if_above_criteria }}',
+                    events: JSON.parse('{!! $events !!}')
                 }
-              },
-              created() {
-                this.installment = (this.originalPrice / this.months) * this.getPercentageOf(this.originalPrice, this.percentage);
               },
               methods: {
                 selectCash() {
