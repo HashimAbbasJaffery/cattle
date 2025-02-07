@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->float("maintenance_fee");
             $table->float("percent_addition");
+            $table->float("add_if_less_than_criteria");
+            $table->float("add_if_above_criteria");
             $table->timestamps();
         });
     }

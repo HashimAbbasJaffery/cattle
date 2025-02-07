@@ -1,4 +1,5 @@
 <x-guest-layout>
+
     <div class="none modal fixed z-9 w-full bg-green-400 bg-opacity-30 backdrop-blur-md flex flex-col items-center justify-center" style="height: 100vh;">
         <div class="image-text mb-3" style="text-align: center; font-weight: 400;">
             <p>Munni</p>
@@ -160,30 +161,12 @@
                 <div class="filter breed bg-grey">
                     <p class="font-medium">Breed</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
-                        <label for="cholistani" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="cholistani" class="breed-checkbox" />
-                            <p class="ml-1">Sahiwal</p>
-                        </label>
-                        <label for="brahmand" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="brahmand" class="breed-checkbox" />
-                            <p class="ml-1">Cholistani</p>
-                        </label>
-                        <label for="sahiwal" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="sahiwal" class="breed-checkbox" />
-                            <p class="ml-1">Red Sindhi</p>
-                        </label>
-                        <label for="bhagnari" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="bhagnari" class="breed-checkbox" />
-                            <p class="ml-1">Sibi Bhagnari</p>
-                        </label>
-                        <label for="bhagnari" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="bhagnari" class="breed-checkbox" />
-                            <p class="ml-1">Mix breed</p>
-                        </label>
-                        <label for="bhagnari" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="bhagnari" class="breed-checkbox" />
-                            <p class="ml-1">Australian</p>
-                        </label>
+                        @foreach ($breeds as $breed)
+                            <label for="{{ $breed->breed }}" class="flex items-center" style="width: 45.33%;">
+                                <input type="checkbox" id="{{ $breed->breed }}" class="{{ $breed->breed }}-checkbox" />
+                                <p class="ml-1">{{ $breed->breed }}</p>
+                            </label>
+                        @endforeach
                     </div>
                 </div>
                 <div class="filter age bg-grey">
@@ -226,7 +209,7 @@
                 </div>
             </div>
             <div class="animals mt-6">
-                <p class="mb-3">{{ $animals->count() }} Animals available</p>
+                <p class="mb-3">1,440 Animals available</p>
                 <div class="" id="animals">
                     @foreach($animals as $animal)
                         <div class="animal flex" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px;">
@@ -256,7 +239,7 @@
                                     </div>
                                     <div class="divider" style="width: 1px; background-color: #aaa7a2; height: 16px;">&nbsp;</div>
                                     <div class="gender category">
-                                        <p style="font-size: 20px;">Female</p>
+                                        <p style="font-size: 20px;">{{ $animal->gender === 0 ? 'Male' : 'Female' }}</p>
                                     </div>
                                     <div class="divider" style="width: 1px; background-color: #aaa7a2; height: 16px;">&nbsp;</div>
                                     <div class="age category">
@@ -276,206 +259,43 @@
                 </div>
             </div>
             <div class="mobile-animals" style="padding-left: 20px; width: 100%; padding-right: 20px;">
-                <a class="animal-link" href="single.html">
-                    <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                        <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                            <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                            <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                                <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                            </div>
-                        </div>
-                        <div class="animal-info" style="width: 109.5%;">
-                            <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                                <div class="card-header" style="line-height: 19px;">
-                                    <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                    <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                    <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
+                @foreach($animals as $animal)
+                    <a href="{{ route('animal.single', [ 'animal' => $animal->slug ]) }}" class="animal-link" href="single.html">
+                        <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
+                            <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
+                                <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
+                                <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
+                                    <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
                                 </div>
-                                <div>
-                                    <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                        <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                            <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                            <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                            <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                            <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                            <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
+                            </div>
+                            <div class="animal-info" style="width: 109.5%;">
+                                <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
+                                    <div class="card-header" style="line-height: 19px;">
+                                        <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">{{ $animal->name }}</h1>
+                                        <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR {{ number_format($animal->price) }}/-</p>
+                                        <p style="padding-left: 10px; font-size: 4.1vw !important;">{{ $animal->live_weight }} KG (live weight)</p>
+                                    </div>
+                                    <div>
+                                        <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
+                                            <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
+                                                <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">{{ $animal->breed->breed }}</p>
+                                                <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
+                                                <p class="mr-2" style="font-size: 3.2vw !important;">{{ $animal->gender === 0 ? 'Male' : 'Female' }}</p>
+                                                <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
+                                                <p class="mr-2" style="font-size: 3.2vw !important;">{{ $animal->age->age }}</p>
+                                            </div>
+                                        </div>
+                                        <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
+                                        <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
+                                            <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
+                                            <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
                                         </div>
                                     </div>
-                                    <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                    <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                        <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                        <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                    <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                        <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                        <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                            <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                        </div>
-                    </div>
-                    <div class="animal-info" style="width: 109.5%;">
-                        <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                            <div class="card-header" style="line-height: 19px;">
-                                <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
-                            </div>
-                            <div>
-                                <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                    <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                        <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
-                                    </div>
-                                </div>
-                                <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                    <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                    <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                    <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                        <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                        <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                            <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                        </div>
-                    </div>
-                    <div class="animal-info" style="width: 109.5%;">
-                        <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                            <div class="card-header" style="line-height: 19px;">
-                                <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
-                            </div>
-                            <div>
-                                <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                    <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                        <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
-                                    </div>
-                                </div>
-                                <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                    <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                    <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                    <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                        <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                        <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                            <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                        </div>
-                    </div>
-                    <div class="animal-info" style="width: 109.5%;">
-                        <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                            <div class="card-header" style="line-height: 19px;">
-                                <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
-                            </div>
-                            <div>
-                                <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                    <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                        <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
-                                    </div>
-                                </div>
-                                <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                    <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                    <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                    <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                        <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                        <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                            <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                        </div>
-                    </div>
-                    <div class="animal-info" style="width: 109.5%;">
-                        <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                            <div class="card-header" style="line-height: 19px;">
-                                <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
-                            </div>
-                            <div>
-                                <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                    <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                        <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
-                                    </div>
-                                </div>
-                                <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                    <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                    <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                    <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
-                        <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
-                        <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                            <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
-                        </div>
-                    </div>
-                    <div class="animal-info" style="width: 109.5%;">
-                        <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
-                            <div class="card-header" style="line-height: 19px;">
-                                <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">Moti Badal</h1>
-                                <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR 400,000/-</p>
-                                <p style="padding-left: 10px; font-size: 4.1vw !important;">420 KG (live weight)</p>
-                            </div>
-                            <div>
-                                <div class="mobile-categories" style="padding-bottom: 2px; margin-top: 4px;">
-                                    <div class="flex items-around" style="width: 100%; padding-bottom: 0px;">
-                                        <p class="mr-2" style="padding-left: 10px; font-size: 3.2vw !important;">Cholistani</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">Female</p>
-                                        <div class="category-separator mr-2" style="height: 14.5px !important; width: 0.5px; background: #cccac5;"></div>
-                                        <p class="mr-2" style="font-size: 3.2vw !important;">3 Teeth</p>
-                                    </div>
-                                </div>
-                                <div style="background: #cccac5; height: 0.5px; width: 100%"></div>
-                                <div class="flex items-start mobile-installment mb-3" style="padding-top: 1%; margin-bottom: 2px;">
-                                    <i style="padding-left: 10px; font-size: 12px;" class="fa-solid fa-calendar-days mr-2" aria-hidden="true"></i>
-                                    <p style="font-size: 9px !important; height: 15px !important;">Installment plans also available</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </a>
+                @endforeach
             </div>
         </section>
         <section id="pagination">

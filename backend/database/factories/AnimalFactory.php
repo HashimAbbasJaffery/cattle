@@ -28,7 +28,7 @@ class AnimalFactory extends Factory
             "gender" => fake()->boolean(),
             "availability" => fake()->boolean(),
             "slug" => Str::slug($title),
-            "price" => fake()->numberBetween(50_000, 1_000_000_000)
+            "price" => fake()->numberBetween(50_000, 99_999)
         ];
     }
 }

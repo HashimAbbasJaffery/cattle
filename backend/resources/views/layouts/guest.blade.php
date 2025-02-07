@@ -8,6 +8,8 @@
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <link href="{{ asset('assets/css/output.css') }}" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    @stack("styles")
 </head>
     <div class="relative"> 
         {{ $slot }}

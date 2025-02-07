@@ -2,16 +2,29 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Models\Animal;
+use App\Models\Breed;
+use App\Models\Event;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get("/testing", function() {
+Route::get("/", function() {
     $animals = Animal::get();
-    return view("index", compact("animals"));
-});
+    $breeds = Breed::get();
+    return view("index", compact("animals", "breeds"));
+})->name("animals.listing");
+
+Route::get("/animal/{animal:slug}", function(Animal $animal) {
+    $events = Event::all();
+    $setting = Setting::first();
+
+    $more_animals = Animal::whereHas("breed", function($query) use($animal) {
+        return $query->where("breed", $animal->breed->breed);
+    })->orWhereHas("age", function($query) use ($animal){
+        return $query->where("age", $animal->age->age);
+    })->orWhere("gender", $animal->gender)->whereNot("id", $animal->id)->limit(10)->get();
+
+    return view("single", compact("animal", "events", "setting", "more_animals"));
+})->name("animal.single");
 
 Route::get('/dashboard', function () {
     return view('dashboard');

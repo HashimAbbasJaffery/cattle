@@ -1137,10 +1137,20 @@ body {
   transform: scale(0.7) !important;
   opacity: 0.4;
 }
-.mobile-containers {
+.mobile-containers, .mobile {
   display: none;
 }
 @media only screen and (max-width: 600px) {
+    .mobile-slide-category {
+        display: block !important;
+        font-size: 5px;
+    }
+    .mobile {
+        display: block !important;
+    }
+    .desktop {
+        display: none;
+    }
   .mobile-animals {
     display: block;
   }
@@ -1434,16 +1444,10 @@ body {
   .facility-list div {
     margin-bottom: 10px;
   }
-  swiper-container, swiper-slide {
-    display: block !important;
-  }
   .mobile-animal:hover {
     transform: scale(1.035) !important;
   }
   .right-container {
-    display: none;
-  }
-  #more {
     display: none;
   }
 }
@@ -1619,3 +1623,5 @@ body {
   syntax: "*";
   inherits: false;
 }
+
+

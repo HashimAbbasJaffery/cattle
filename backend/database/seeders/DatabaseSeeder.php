@@ -58,7 +58,9 @@ class DatabaseSeeder extends Seeder
         Animal::factory(50)->create();
         Setting::factory()->create([
             "maintenance_fee" => 15_000,
-            "percent_addition" => 2
+            "percent_addition" => 2,
+            "add_if_less_than_criteria" => 2,
+            "add_if_above_criteria" => 1.4
         ]);
     }
 }
