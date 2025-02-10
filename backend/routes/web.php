@@ -7,6 +7,15 @@ use App\Models\Breed;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function() {
+
+    // if(request()->expectsJson()) {
+    //     $from = request()->from;
+    //     $to = request()->to;
+    //     $breed_id = request()->breed;
+    //     $age_id = request()->age_id;
+    //     $gender = request()->gender;
+    // }
+
     $animals = Animal::paginate(8);
     $breeds = Breed::get();
     return view("index", compact("animals", "breeds"));
