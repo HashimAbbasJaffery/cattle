@@ -18,7 +18,9 @@ class AnimalController extends Controller
         })->orWhereHas("age", function($query) use ($animal){
             return $query->where("age", $animal->age->age);
         })->orWhere("gender", $animal->gender)->whereNot("id", $animal->id)->limit(10)->get();
-    
+        
         return view("single", compact("animal", "events", "setting", "more_animals"));
     }
 }
+
+

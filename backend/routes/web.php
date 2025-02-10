@@ -4,8 +4,6 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Animal;
 use App\Models\Breed;
-use App\Models\Event;
-use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function() {

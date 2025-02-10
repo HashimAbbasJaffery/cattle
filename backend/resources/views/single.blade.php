@@ -114,7 +114,7 @@
                     <div class="mobile-containers relative" style="padding-left: 20px;">
                         <div class="mobile-left-container">
                             <h1 style="margin-top: 15px; font-weight: 600; font-size: 5.7vw;">{{ $animal->name }}</h1>
-                            <p class="mobile-price" style="font-weight: 600;">PKR {{ number_format($animal->price) }}/-</p>
+                            <p class="mobile-price" style="font-weight: 600;" v-text="'PKR ' + numberWithCommas(price) + '/-'"></p>
                             <div class="live-weight flex items-center">
                                 <p class="mr-5" style="font-size: 13px;">{{ $animal->live_weight }}kg live weight</p>
                                 <div class="flex items-center">
@@ -389,7 +389,7 @@
                     </swiper-slide>
                 @endforeach
             </swiper-container>
-            <div class="invoice" v-if="show" :class="{ 'popup': show }" style="padding: 30px;">
+            <div class="invoice" v-if="show" :class="{ 'popup': show }" style="padding: 30px; overflow: auto;">
                 <h1>Requirement for Eid-ul-Azha</h1>
                 <p>
                     Eid-ul-Azha: 
@@ -408,11 +408,12 @@
                 <p class="flex justify-between"><span>Age:</span> {{ $animal->age->age }}</p>
                 <h1>Pricing</h1>
                 <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100) }}/-</p>
-                <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + ((this.originalPrice / this.months) + this.getPercentageOf(this.originalPrice, this.events.filter(event => event.months == months)[0].percentage)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/month'"></span></p>
-                <p class="flex justify-between" v-if="is_cash"><span>Monthly Fee:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
-                <p class="flex justify-between" style="border-bottom: 1px solid grey; padding-bottom: 10px; margin-bottom: 10px;"><span>Duration:</span> <span v-text="months + ' Months'"></span></p>
+                <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + numberWithCommas(installment.toFixed(0)) + '/month'"></span></p>
+                <p class="flex justify-between"><span>Maintenance Fee/Month:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
+                <p class="flex justify-between" v-if="!is_cash" style="border-bottom: 1px solid grey; padding-bottom: 10px; margin-bottom: 10px;"><span>Duration:</span> <span v-text="months + ' Months'"></span></p>
                 <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((maintenance * months) + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
-                <p class="flex justify-between" style="font-weight: bold;" v-else><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + (((this.originalPrice / this.months) + this.getPercentageOf(this.originalPrice, this.events.filter(event => event.months == months)[0].percentage)) * months).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <p class="flex justify-between" style="font-weight: bold;" v-else><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((((installment) * months)) + (this.maintenance * months)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <button class="bg-green w-full rounded-full mt-3" style="color: white">Whatsapp</button>
             </div>
         </section>
         <section id="buttons" class="container mx-auto z-1" style="background: white; padding-top: 10px; padding-bottom: 10px;">
@@ -421,7 +422,7 @@
                 <button class="bg-green w-1/2 rounded-full" style="color: white;" @click="selectInstallment">Installment</button>
             </div>
             <div class="contact">
-                <button class="bg-green w-full p-2 rounded-full" style="color: white;">Whatsapp</button>
+                <button class="bg-green w-full p-2 rounded-full" style="color: white; height: 40px !important;">Whatsapp</button>
             </div>
         </section>
     </main>
@@ -446,6 +447,20 @@
                     events: JSON.parse('{!! $events !!}')
                 }
               },
+              mounted() {
+                const percentage = this.events.filter(event => event.months == this.months)[0].percentage * this.months;
+                const percentageValued = (this.price * percentage) / 100;
+                this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
+                this.installment = parseFloat(this.installment);
+            },
+            watch: {
+                months(newValue) {
+                    const percentage = this.events.filter(event => event.months == newValue)[0].percentage * this.months;
+                    const percentageValued = (this.price * percentage) / 100;
+                    this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
+                    this.installment = parseFloat(this.installment);
+                }
+            },
               methods: {
                 selectCash() {
                     this.show = !this.show;
@@ -457,6 +472,13 @@
                 },
                 getPercentageOf(price, percentage) {
                     return (price * percentage) / 100;
+                },
+                numberWithCommas(x) {
+                    x = x.toString();
+                    var pattern = /(-?\d+)(\d{3})/;
+                    while (pattern.test(x))
+                        x = x.replace(pattern, "$1,$2");
+                    return x;
                 }
               }
             }).mount('#app')
