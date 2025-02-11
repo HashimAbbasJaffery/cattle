@@ -21,9 +21,19 @@ class Animal extends Model
 
     public function scopeFilter(Builder $query, $filters) {
 
+        // Searchng FIlter
+        $query->when($filters["keyword"] ?? false, function() use ($query, $filters) {
+            $query->whereLike("name", "%" . $filters["keyword"] . "%");
+        });
+
+        // Pricing Filter
+        $query->when(isset($filters["from"]) && isset($filters["to"]), function() use ($query, $filters) {
+            $query->whereBetween("price", [ $filters["from"], $filters["to"] ]);
+        });
+
         // Pricing Filter
         $query->when($filters["price"] ?? null, function() use ($query, $filters) {
-            $query->whereBetween("price", [ $filters["from"], $filters["to"] ]);
+            $query->whereBetween("price", [ $filters["price"][0] ?? PHP_INT_MIN, $filters["price"][1] ?? PHP_INT_MAX ]);
         });
 
         // Breed Filter
@@ -40,7 +50,7 @@ class Animal extends Model
             });
         });
 
-        $query->when($filters["gender"] ?? null, function() use ($query, $filters) {
+        $query->when(isset($filters["gender"]), function() use ($query, $filters) {
             $query->where("gender", $filters["gender"]);
         });
     }

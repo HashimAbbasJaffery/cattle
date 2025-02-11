@@ -76,6 +76,8 @@ const items = document.querySelectorAll(".item");
 items.forEach(item => {
     item.addEventListener("click", function(e) {
         const content = e.target.textContent;
+        // alert(content);
+        alert(item.dataset.list);
         const main_content = document.querySelector(`#${item.dataset.list}-container p:first-child`);
         main_content.textContent = content;
     })
@@ -101,11 +103,3 @@ items.forEach(item => {
 //         clearTimeout(holdTimer);
 //     }
 
-
-    document.querySelectorAll('.mobile-animal').forEach((el, index) => {
-        setTimeout(() => {
-            el.style.opacity = 1;
-            el.style.transform = 'translateX(0)';
-            el.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
-        }, index * 300); // Delay increases for each element
-    });

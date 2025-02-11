@@ -2,24 +2,42 @@
 
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Age;
 use App\Models\Animal;
 use App\Models\Breed;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function() {
 
-    // if(request()->expectsJson()) {
-    //     $from = request()->from;
-    //     $to = request()->to;
-    //     $breed_id = request()->breed;
-    //     $age_id = request()->age_id;
-    //     $gender = request()->gender;
-    // }
+    if(request()->expectsJson()) {
+        $filters = [
+            "search" => request()->search,
+            "from" => request()->from,
+            "to" => request()->to,
+            "price" => [request()->from, request()->to],
+            "breed" => request()->breed,
+            "age" => request()->age,
+            "gender" => request()->gender
+        ];
+
+        $animals = Animal::filter($filters)->paginate(8)->withQueryString();
+
+        return $animals;
+    }
 
     $animals = Animal::paginate(8);
     $breeds = Breed::get();
-    return view("index", compact("animals", "breeds"));
+    $ages = Age::get();
+    return view("index", compact("animals", "breeds", "ages"));
 })->name("animals.listing");
+
+Route::get("/breeds", function() {
+    return Breed::get();
+});
+
+Route::get("/ages", function() {
+    return Age::get();
+});
 
 Route::get("/animal/{animal:slug}", [AnimalController::class, "index"])->name("animal.single");
 

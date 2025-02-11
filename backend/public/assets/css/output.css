@@ -1357,10 +1357,6 @@ body {
     transform: scale(0.7) !important;
     opacity: 0.4;
   }
-  .mobile-animal {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
   .arrows {
     border: none;
   }
