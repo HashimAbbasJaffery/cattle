@@ -390,6 +390,10 @@
                 @endforeach
             </swiper-container>
             <div class="invoice" v-if="show" :class="{ 'popup': show }" style="padding: 30px; overflow: auto;">
+                <div class="options w-full flex rounded-full" style="background: #e8e7e6" v-if="is_cash">
+                    <div @click="is_boarding = true" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': is_boarding }" :style="{ 'color': is_boarding ? 'white': 'black' }" style="height: 40px !important;">Boarding Service</div>
+                    <div @click="is_boarding = false" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': !is_boarding }" :style="{ 'color': is_boarding ? 'black': 'white' }" style="height: 40px !important;">Delivery</div>
+                </div>
                 <h1>Requirement for Eid-ul-Azha</h1>
                 <p>
                     Eid-ul-Azha: 
@@ -409,9 +413,9 @@
                 <h1>Pricing</h1>
                 <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100) }}/-</p>
                 <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + numberWithCommas((parseFloat(installment) + parseFloat(maintenance)).toFixed(0)) + '/month'"></span></p>
-                <p class="flex justify-between"><span>Maintenance Fee per Month:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
+                <p class="flex justify-between" v-if="is_boarding || !is_cash"><span>Maintenance Fee per Month:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
                 <p class="flex justify-between" v-if="!is_cash" style="border-bottom: 1px solid grey; padding-bottom: 10px; margin-bottom: 10px;"><span>Duration:</span> <span v-text="months + ' Months'"></span></p>
-                <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((maintenance * months) + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((is_boarding ? maintenance * months : '') + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
                 <p class="flex justify-between" style="font-weight: bold;" v-else><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((((installment) * months)) + (this.maintenance * months)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
                 <button class="bg-green w-full rounded-full mt-3" style="color: white">Whatsapp</button>
             </div>
@@ -439,6 +443,7 @@
                     is_cash: true,
                     show: false,
                     months: 12,
+                    is_boarding: true,
                     originalPrice: '{{ $animal->price }}',
                     price: '{{ $animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100 }}',
                     maintenance: '{{ $animal->maintenance_fee }}',

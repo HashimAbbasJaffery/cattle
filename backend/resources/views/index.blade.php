@@ -389,8 +389,20 @@
               },
 
               watch: {
-                search() {
-                    console.log("Test");
+                async search() {
+                    const response = await axios.get("/", {
+                        params: {
+                            keyword: this.search,
+                            from: this.from,
+                            to: this.to,
+                            breed: this.breed,
+                            age: this.age 
+                        }
+                    })
+
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">";
                 }
               },
 
@@ -422,13 +434,6 @@
                     this.animals.links[0].label = "<";
                     this.animals.links[this.animals.links.length - 1].label = ">";
                     this.is_filtering = false;
-                },
-                debounce(func, delay) {
-                    let timer;
-                    return function (...args) {
-                        clearTimeout(timer);
-                        timer = setTimeout(() => func.apply(this, args), delay);
-                    };
                 },
               }
             }).mount('#app')

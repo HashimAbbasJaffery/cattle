@@ -11,7 +11,7 @@ Route::get("/", function() {
 
     if(request()->expectsJson()) {
         $filters = [
-            "search" => request()->search,
+            "keyword" => request()->keyword,
             "from" => request()->from,
             "to" => request()->to,
             "price" => [request()->from, request()->to],
