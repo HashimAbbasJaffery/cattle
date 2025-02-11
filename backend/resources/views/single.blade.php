@@ -1,6 +1,15 @@
 <x-guest-layout>
     @push('styles')
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <style>
+
+        #map {
+            height: 180px;
+            width: 100%;
+        }
         .more-like-mobile {
             display: none;
         }
@@ -389,7 +398,7 @@
                     </swiper-slide>
                 @endforeach
             </swiper-container>
-            <div class="invoice" v-if="show" :class="{ 'popup': show }" style="padding: 30px; overflow: auto;">
+            <div class="invoice" v-show="show" :class="{ 'popup': show }" style="padding: 30px; overflow: auto;">
                 <div class="options w-full flex rounded-full" style="background: #e8e7e6" v-if="is_cash">
                     <div @click="is_boarding = true" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': is_boarding }" :style="{ 'color': is_boarding ? 'white': 'black' }" style="height: 40px !important;">Boarding Service</div>
                     <div @click="is_boarding = false" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': !is_boarding }" :style="{ 'color': is_boarding ? 'black': 'white' }" style="height: 40px !important;">Delivery</div>
@@ -403,6 +412,8 @@
                         @endforeach
                     </select>
                 </p>
+                <h1>Drop off Location</h1>
+                <div id="map">&nbsp;</div>
                 <h1>Animal Details</h1>
                 <p class="flex justify-between"><span>Status:</span> Available</p>
                 <p class="flex justify-between"><span>Name:</span> {{ $animal->name }}</p>
@@ -457,6 +468,25 @@
                 const percentageValued = (this.price * percentage) / 100;
                 this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
                 this.installment = parseFloat(this.installment);
+
+                var map = L.map('map').setView([24.8607, 67.0011], 13); // Default: Karachi
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    zoom: 3,
+                }).addTo(map);
+
+
+                // Click Event to Select Location
+                var marker;
+                map.on('click', function (e) {
+                    var lat = e.latlng.lat;
+                    var lon = e.latlng.lng;
+                    console.log(`[${lat} - ${lon}]`)
+
+
+                    if (marker) map.removeLayer(marker);
+
+                    marker = L.marker([lat, lon]).addTo(map)
+                });
             },
             watch: {
                 months(newValue) {
@@ -468,6 +498,7 @@
             },
               methods: {
                 selectCash() {
+
                     this.show = !this.show;
                     this.is_cash = true;
                 },
