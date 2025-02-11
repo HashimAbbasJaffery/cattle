@@ -412,8 +412,9 @@
                         @endforeach
                     </select>
                 </p>
-                <h1>Drop off Location</h1>
-                <div id="map">&nbsp;</div>
+                <h1 v-show="is_cash && !is_boarding">Drop off Location</h1>
+                <input type="text" v-model="location" class="w-full" v-show="is_cash && !is_boarding" style="border: 1px solid black; padding-left: 10px; margin-bottom: 10px;" placeholder="Location"/>
+                <div id="map" v-show="is_cash && !is_boarding">&nbsp;</div>
                 <h1>Animal Details</h1>
                 <p class="flex justify-between"><span>Status:</span> Available</p>
                 <p class="flex justify-between"><span>Name:</span> {{ $animal->name }}</p>
@@ -445,6 +446,7 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
         <script src="{{ asset('assets/js/index.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
             const { createApp } = Vue
           
@@ -460,7 +462,10 @@
                     maintenance: '{{ $animal->maintenance_fee }}',
                     installment: null,
                     percentage: '{{ $setting->add_if_above_criteria }}',
-                    events: JSON.parse('{!! $events !!}')
+                    events: JSON.parse('{!! $events !!}'),
+                    location: "",
+                    latitude: "",
+                    longitude: ""
                 }
               },
               mounted() {
@@ -469,7 +474,7 @@
                 this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
                 this.installment = parseFloat(this.installment);
 
-                var map = L.map('map').setView([24.8607, 67.0011], 13); // Default: Karachi
+                var map = L.map('map', { attributionControl: false }).setView([24.8607, 67.0011], 13); // Default: Karachi
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     zoom: 3,
                 }).addTo(map);
@@ -480,13 +485,15 @@
                 map.on('click', function (e) {
                     var lat = e.latlng.lat;
                     var lon = e.latlng.lng;
-                    console.log(`[${lat} - ${lon}]`)
-
-
+                    this.latitude = e.latlng.lat;
+                    this.longitude = e.latlng.lng;
+                    
                     if (marker) map.removeLayer(marker);
 
-                    marker = L.marker([lat, lon]).addTo(map)
+                    marker = L.marker([this.latitude, this.longitude]).addTo(map)
                 });
+
+          
             },
             watch: {
                 months(newValue) {
@@ -494,11 +501,16 @@
                     const percentageValued = (this.price * percentage) / 100;
                     this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
                     this.installment = parseFloat(this.installment);
+                },
+                async location(newValue) {
+                    const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${newValue}`)
+                    console.log(response.data[0].lat);
+                    this.latitude = response.data[0].lat;
+                    this.longitude = response.data[0].lon; 
                 }
             },
               methods: {
                 selectCash() {
-
                     this.show = !this.show;
                     this.is_cash = true;
                 },
