@@ -511,11 +511,6 @@
                     this.marker = L.marker([this.latitude, this.longitude]).addTo(map)
                     this.distance = this.haversineDistance(lat, lon, this.baseLatitude, this.baseLongitude);
                 });
-
-               
-
-
-          
             },
             watch: {
                 months(newValue) {
