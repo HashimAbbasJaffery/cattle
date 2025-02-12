@@ -413,7 +413,15 @@
                     </select>
                 </p>
                 <h1 v-show="is_cash && !is_boarding">Drop off Location</h1>
-                <input type="text" v-model="location" class="w-full" v-show="is_cash && !is_boarding" style="border: 1px solid black; padding-left: 10px; margin-bottom: 10px;" placeholder="Location"/>
+                <div class="drawer relative">
+                    <input type="text" v-model="location" class="w-full" v-show="is_cash && !is_boarding" style="border: 1px solid black; padding-left: 10px; margin-bottom: 10px;" placeholder="Location"/>
+                    <div v-if="location && locations.length" class="list absolute mt-3" style="z-index: 9999 !important; background: white; padding: 10px; margin-bottom: 30px;">
+                        <p v-for="location in locations" @click="selectLocation(location.lat, location.lon)" style="margin-bottom: 10px;" v-text="location.display_name"></p>
+                    </div>
+                    <div v-if="is_fetching && location" class="list absolute mt-3" style="z-index: 9999 !important; background: white; padding: 10px; margin-bottom: 30px;">
+                        <p style="text-align: center;">Loading...</p>
+                    </div>
+                </div>
                 <div id="map" v-show="is_cash && !is_boarding">&nbsp;</div>
                 <h1>Animal Details</h1>
                 <p class="flex justify-between"><span>Status:</span> Available</p>
@@ -426,8 +434,9 @@
                 <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100) }}/-</p>
                 <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + numberWithCommas((parseFloat(installment) + parseFloat(maintenance)).toFixed(0)) + '/month'"></span></p>
                 <p class="flex justify-between" v-if="is_boarding || !is_cash"><span>Maintenance Fee per Month:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
+                <p class="flex justify-between" v-if="!is_boarding && is_cash"><span>Delivery Charges:</span> <span v-text="((distance * 150).toFixed(0)) + '/-'"></span></p>
                 <p class="flex justify-between" v-if="!is_cash" style="border-bottom: 1px solid grey; padding-bottom: 10px; margin-bottom: 10px;"><span>Duration:</span> <span v-text="months + ' Months'"></span></p>
-                <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((is_boarding ? maintenance * months : '') + parseInt(price)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
+                <p class="flex justify-between" style="font-weight: bold;" v-if="is_cash"><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + (parseFloat(((is_boarding ? maintenance * months : '') + parseInt(price))) + parseFloat((distance * 150))).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
                 <p class="flex justify-between" style="font-weight: bold;" v-else><span class="mt-3">Total:</span><span class="total-price mt-3" v-text="'PKR ' + ((((installment) * months)) + (this.maintenance * months)).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '/-'"></span></p>
                 <button class="bg-green w-full rounded-full mt-3" style="color: white">Whatsapp</button>
             </div>
@@ -465,7 +474,14 @@
                     events: JSON.parse('{!! $events !!}'),
                     location: "",
                     latitude: "",
-                    longitude: ""
+                    longitude: "",
+                    map: "",
+                    locations: "",
+                    marker: "",
+                    baseLatitude: "24.7256177868785",
+                    baseLongitude: "67.87887312698939",
+                    distance: 0,
+                    is_fetching: true,
                 }
               },
               mounted() {
@@ -478,19 +494,21 @@
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     zoom: 3,
                 }).addTo(map);
-
+                this.map = map;
 
                 // Click Event to Select Location
-                var marker;
-                map.on('click', function (e) {
+                map.on('click', (e) => {
                     var lat = e.latlng.lat;
                     var lon = e.latlng.lng;
                     this.latitude = e.latlng.lat;
                     this.longitude = e.latlng.lng;
                     
-                    if (marker) map.removeLayer(marker);
+                    
+                    if (this.marker) map.removeLayer(this.marker);
+                    
 
-                    marker = L.marker([this.latitude, this.longitude]).addTo(map)
+                    this.marker = L.marker([this.latitude, this.longitude]).addTo(map)
+                    this.distance = this.haversineDistance(lat, lon, this.baseLatitude, this.baseLongitude);
                 });
 
           
@@ -502,14 +520,48 @@
                     this.installment =  (((parseFloat(this.price) + parseFloat(percentageValued)) / this.months));
                     this.installment = parseFloat(this.installment);
                 },
-                async location(newValue) {
-                    const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${newValue}`)
-                    console.log(response.data[0].lat);
-                    this.latitude = response.data[0].lat;
-                    this.longitude = response.data[0].lon; 
+                location: function(newValue) {
+                    if (!newValue) return;
+                    this.is_fetching = true;
+            
+                    clearTimeout(this.debounceTimer);
+                    
+                    this.debounceTimer = setTimeout(async () => {
+                        try {
+                            const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${newValue}`);
+                            this.locations = response.data;
+                        } catch (error) {
+                            console.error("Error fetching locations:", error);
+                        } finally {
+                            this.is_fetching = false;
+                        }
+                    }, 1000);
                 }
             },
               methods: {
+                debounce(func, delay = 500) {
+                    let timer;
+                    return function (...args) {
+                        clearTimeout(timer);
+                        timer = setTimeout(() => func.apply(this, args), delay);
+                    };
+                },
+                haversineDistance(lat1, lon1, lat2, lon2) {
+                    const toRadians = (degree) => degree * (Math.PI / 180);
+
+                    const R = 6371; // Earth's radius in kilometers
+                    const dLat = toRadians(lat2 - lat1);
+                    const dLon = toRadians(lon2 - lon1);
+
+                    const a = 
+                        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                    return R * c; // Distance in kilometers
+                },
                 selectCash() {
                     this.show = !this.show;
                     this.is_cash = true;
@@ -527,6 +579,28 @@
                     while (pattern.test(x))
                         x = x.replace(pattern, "$1,$2");
                     return x;
+                },
+                selectLocation(lat, lon) {
+                    this.latitude = lat;
+                    this.longitude = lon;
+
+                    // Check if a marker already exists and remove it
+                    console.log(this.marker);
+                    if (this.marker) {
+                        this.map.removeLayer(this.marker);
+                    }
+
+                    // Create a new marker and add it to the map
+                    this.marker = L.marker([lat, lon]).addTo(this.map)
+
+                    // Optionally, move the map to the new location
+                    
+                    let currentZoom = this.map.getZoom(); // Get current zoom level
+                    this.map.setView([lat, lon], Math.max(currentZoom, 15)); // Keep zoom close (15 or higher)
+
+                    this.locations = "";
+
+                    this.distance = this.haversineDistance(lat, lon, this.baseLatitude, this.baseLongitude);
                 }
               }
             }).mount('#app')
