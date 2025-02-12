@@ -423,6 +423,7 @@
                     </div>
                 </div>
                 <div id="map" v-show="is_cash && !is_boarding">&nbsp;</div>
+                <p @click="setCurrentLocation" v-show="is_cash && !is_boarding" style="text-decoration: underline; float: right;">Your Location</p>
                 <h1>Animal Details</h1>
                 <p class="flex justify-between"><span>Status:</span> Available</p>
                 <p class="flex justify-between"><span>Name:</span> {{ $animal->name }}</p>
@@ -511,6 +512,9 @@
                     this.distance = this.haversineDistance(lat, lon, this.baseLatitude, this.baseLongitude);
                 });
 
+               
+
+
           
             },
             watch: {
@@ -539,6 +543,24 @@
                 }
             },
               methods: {
+                setCurrentLocation() {
+                    if ("geolocation" in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const latitude = position.coords.latitude;
+                                const longitude = position.coords.longitude;
+                                this.latitude = latitude;
+                                this.longitude = longitude;
+                                this.selectLocation(this.latitude, this.longitude);
+                            },
+                            (error) => {
+                                console.error("Error getting location:", error.message);
+                            }
+                        );
+                    } else {
+                        console.error("Geolocation is not supported by this browser.");
+                    }
+                },
                 debounce(func, delay = 500) {
                     let timer;
                     return function (...args) {
@@ -560,7 +582,7 @@
 
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-                    return R * c; // Distance in kilometers
+                    return R * c;
                 },
                 selectCash() {
                     this.show = !this.show;
@@ -584,17 +606,12 @@
                     this.latitude = lat;
                     this.longitude = lon;
 
-                    // Check if a marker already exists and remove it
-                    console.log(this.marker);
                     if (this.marker) {
                         this.map.removeLayer(this.marker);
                     }
 
-                    // Create a new marker and add it to the map
                     this.marker = L.marker([lat, lon]).addTo(this.map)
 
-                    // Optionally, move the map to the new location
-                    
                     let currentZoom = this.map.getZoom(); // Get current zoom level
                     this.map.setView([lat, lon], Math.max(currentZoom, 15)); // Keep zoom close (15 or higher)
 
