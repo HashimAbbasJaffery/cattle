@@ -28,7 +28,7 @@
                 <tbody>
                     <tr v-for="breed in breeds">
                         <td v-text="breed.breed"></td>
-                        <td>1</td>
+                        <td v-text="breed.animals_count"></td>
                         <td>
                             <button class="btn btn-primary btn-sm" style="margin-right: 10px;">Update</button>
                             <button class="btn btn-danger btn-sm" @click="deleteBreed(breed.id)">Delete</button>
@@ -153,7 +153,7 @@
                     }).then(async (result) => {
                       if (result.isConfirmed) {
                         const response = await axios.post(`/admin/breed/${id}/delete`, { _method: "DELETE" });
-                        this.ages = this.ages.filter(age => age.id != response.data.id);
+                        this.breeds = this.breeds.filter(breed => breed.id != id);
                       }
                     });
                 },

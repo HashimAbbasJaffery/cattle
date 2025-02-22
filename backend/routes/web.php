@@ -39,9 +39,12 @@ Route::get("/ages", function() {
     return Age::get();
 });
 
+Route::get("/admin/setting", function() {
+    return view("admin.Setting.setting");
+});
 
 Route::get("/admin/categories", function() {
-    $breeds = Breed::all();
+    $breeds = Breed::withCount("animals")->get();
     $ages = Age::withCount("animals")->get();
     return view("admin.Categories.index", compact("breeds", "ages"));
 });
