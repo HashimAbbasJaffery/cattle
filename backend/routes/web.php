@@ -39,6 +39,40 @@ Route::get("/ages", function() {
     return Age::get();
 });
 
+
+Route::get("/admin/categories", function() {
+    $breeds = Breed::all();
+    $ages = Age::withCount("animals")->get();
+    return view("admin.Categories.index", compact("breeds", "ages"));
+});
+
+Route::post("/admin/age/create", function() {
+    $age = Age::create([
+        "age" => request()->age
+    ]);
+    return $age;
+})->name("age.create");
+Route::post('/admin/breeds/create', function() {
+    $breed = Breed::create([
+        "breed" => request()->breed
+    ]);
+    return $breed;
+});
+Route::delete("/admin/breed/{breed}/delete", function(Breed $breed) {
+    $breed->delete();
+});
+Route::delete("/admin/age/{age}/delete", function(Age $age) {
+    $deleted_age = $age;
+    $age->delete();
+    return $deleted_age;
+});
+Route::put("/admin/age/{age}/update", function(Age $age) {
+    $age = $age->update([
+        "age" => request()->age
+    ]);
+    return $age;
+});
+
 Route::get("/animal/{animal:slug}", [AnimalController::class, "index"])->name("animal.single");
 
 Route::get('/dashboard', function () {

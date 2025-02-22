@@ -423,7 +423,7 @@
                     </div>
                 </div>
                 <div id="map" v-show="is_cash && !is_boarding">&nbsp;</div>
-                <p @click="setCurrentLocation" v-show="is_cash && !is_boarding" style="text-decoration: underline; float: right;">Your Location</p>
+                <p @click="setCurrentLocation" v-show="is_cash && !is_boarding" style="text-decoration: underline; float: right;">Current Location</p>
                 <h1>Animal Details</h1>
                 <p class="flex justify-between"><span>Status:</span> Available</p>
                 <p class="flex justify-between"><span>Name:</span> {{ $animal->name }}</p>
@@ -452,7 +452,6 @@
             </div>
         </section>
     </main>
-
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
         <script src="{{ asset('assets/js/index.js') }}"></script>

@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Breed extends Model
 {
+    protected $guarded = [ "id", "created_at", "updated_at" ];
     use HasFactory;
+
+    public function animals() {
+        return $this->hasMany(Animal::class);
+    }
 }
