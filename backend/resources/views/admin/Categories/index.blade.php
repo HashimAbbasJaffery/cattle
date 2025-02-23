@@ -30,7 +30,7 @@
                         <td v-text="breed.breed"></td>
                         <td v-text="breed.animals_count"></td>
                         <td>
-                            <button class="btn btn-primary btn-sm" style="margin-right: 10px;">Update</button>
+                            <button class="btn btn-primary btn-sm" @click="updateBreed(breed.breed, breed.id)" style="margin-right: 10px;">Update</button>
                             <button class="btn btn-danger btn-sm" @click="deleteBreed(breed.id)">Delete</button>
                         </td>
                     </tr>
@@ -59,7 +59,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                        
+
                     <tr v-for="age in ages">
                         <td v-text="age.age"></td>
                         <td v-text="age.animals_count"></td>
@@ -68,7 +68,7 @@
                             <button class="btn btn-danger btn-sm" @click="deleteAge(age.id)">Delete</button>
                         </td>
                     </tr>
-                  
+
                 </tbody>
               </table>
             </div>
@@ -87,7 +87,7 @@
               }
             },
             mounted() {
-              
+
             },
             methods: {
                 createAge() {
@@ -198,6 +198,27 @@
                       const response = await axios.post(`/admin/age/${id}/update`, { age, _method: "PUT" });
                       const age_filter = this.ages.filter(age => age.id == id);
                       age_filter[0].age = age;
+                    }
+                  });
+                },
+                updateBreed(breed, id) {
+                  Swal.fire({
+                    title: "Update Breed",
+                    input: "text",
+                    inputValue: breed,
+                    inputAttributes: {
+                      autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Create",
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: () => !Swal.isLoading()
+                  }).then(async (result) => {
+                    if (result.isConfirmed) {
+                      const breed = result.value;
+                      const response = await axios.post(`/admin/breed/${id}/update`, { breed, _method: "PUT" });
+                      const breed_filter = this.breeds.filter(breed => breed.id == id);
+                      breed_filter[0].breed = breed;
                     }
                   });
                 }
