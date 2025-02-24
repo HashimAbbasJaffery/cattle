@@ -202,36 +202,18 @@
                 <div class="filter breed bg-grey">
                     <p class="font-medium">Breed</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
-                        @foreach ($breeds as $breed)
-                            <label for="{{ $breed->breed }}" class="flex items-center" style="width: 45.33%;">
-                                <input type="checkbox" id="{{ $breed->breed }}" class="{{ $breed->breed }}-checkbox" />
-                                <p class="ml-1">{{ $breed->breed }}</p>
-                            </label>
-                        @endforeach
+                        <label v-for="breed in breeds" :for="breed.breed" class="flex items-center" style="width: 45.33%;">
+                            <input type="checkbox" :id="breed.breed" :class="`breed-checkbox`" />
+                            <p class="ml-1" v-text="breed.breed"></p>
+                        </label>
                     </div>
                 </div>
                 <div class="filter age bg-grey">
                     <p class="font-medium">Age</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
-                        <label for="cholistani" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="cholistani" class="breed-checkbox" />
-                            <p class="ml-1">Below 1 year</p>
-                        </label>
-                        <label for="brahmand" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="brahmand" class="breed-checkbox" />
-                            <p class="ml-1">2 Teeth</p>
-                        </label>
-                        <label for="sahiwal" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="sahiwal" class="breed-checkbox" />
-                            <p class="ml-1">4 Teeth</p>
-                        </label>
-                        <label for="bhagnari" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="bhagnari" class="breed-checkbox" />
-                            <p class="ml-1">6 Teeth</p>
-                        </label>
-                        <label for="bhagnari" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="bhagnari" class="breed-checkbox" />
-                            <p class="ml-1">6 Teeth+</p>
+                        <label :for="age.age" v-for="age in ages" class="flex items-center" style="width: 45.33%;">
+                            <input type="checkbox" :id="age.age" class="breed-checkbox" />
+                            <p class="ml-1" v-text="age.age"></p>
                         </label>
                     </div>
                 </div>
@@ -250,7 +232,7 @@
                 </div>
             </div>
             <div class="animals mt-6">
-                <p class="mb-3">1,440 Animals available</p>
+                <p class="mb-3">{{ number_format($animals->count()) }} Animals available</p>
                 <div class="" id="animals">
                     <div v-for="animal in animals.data" class="animal flex" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px;">
                         <div class="animal-image justify-end relative" style="width: 40%;">
@@ -310,7 +292,7 @@
                             <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
                                 <div class="card-header" style="line-height: 19px;">
                                     <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;" v-text="animal.name"></h1>
-                                    <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR <span v-text="animal.price"></span>/-</p>
+                                    <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR <span v-text="animal.price <= 100000 ? (animal.price * 2).toLocaleString('en-US') : animal.price"></span>/-</p>
                                     <p style="padding-left: 10px; font-size: 4.1vw !important;"><span v-text="animal.live_weight"></span> KG (live weight)</p>
                                 </div>
                                 <div>
@@ -335,12 +317,17 @@
                 </a>
             </div>
         </section>
-      
+        <section id="desktop-pagination" v-if="!is_filtering">
+            <div style="padding-left: 10px; text-align: center;" class="desktop-pagination mt-4 mb-3">
+                <a v-for="link in animals.links" @click="changePage(link.url)" class="pagination inline-block" :class="{ 'active': link.active }" v-text="link.label"></a>
+            </div>
+        </section>
         <section id="pagination" v-if="!is_filtering">
             <div style="padding-left: 10px; text-align: center;" class="mobile-pagination mt-4 mb-3">
                 <a v-for="link in animals.links" @click="changePage(link.url)" class="pagination inline-block" :class="{ 'active': link.active }" v-text="link.label"></a>
             </div>
         </section>
+        
     </div>
     </main>
     

@@ -6,6 +6,8 @@ use App\Models\Age;
 use App\Models\Animal;
 use App\Models\Breed;
 use App\Models\Event;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function() {
@@ -41,14 +43,51 @@ Route::get("/ages", function() {
 });
 
 Route::get("/admin/setting", function() {
-    return view("admin.Setting.setting");
-});
+    $setting = App\Models\Setting::first();
+    return view("admin.Setting.setting", compact("setting"));
+})->name("admin.settings");
+
+Route::post("/admin/setting/update", function() {
+    $data = request()->validate([
+        "add_if_less_than_criteria" => [ "required" ],
+        "add_if_above_criteria" => [ "required" ],
+        "price_per_km" => [ "required" ]
+    ]);
+    $setting = (Setting::first())->update($data);
+    return back();
+})->name("setting.update");
 
 Route::get("/admin/categories", function() {
     $breeds = Breed::withCount("animals")->get();
     $ages = Age::withCount("animals")->get();
     return view("admin.Categories.index", compact("breeds", "ages"));
 })->name('admin.categories');
+
+
+Route::get("/admin/animals/get", function() {
+    $keyword = request()->keyword;
+    $animals = Animal::when(isset($keyword) ?? false,function($query) use ($keyword){
+                            $query->whereLike("name", "%$keyword%");
+                        })
+                        ->paginate(8)
+                        ->withQueryString();
+    return $animals;
+});
+
+Route::get("/admin/animals", function() {
+    $animals = Animal::with(["age", "breed"])->paginate(8);
+    return view("admin.Animals.index", compact("animals"));
+})->name("admin.animals");
+
+Route::get("/admin/animals/create", function() {
+    $ages = Age::get();
+    $breeds = Breed::get();
+    return view("admin.Animals.create", compact("ages", "breeds"));
+});
+
+Route::delete("/admin/animal/{animal}/delete", function(Animal $animal) {
+    $animal->delete();
+});
 
 Route::post("/admin/age/create", function() {
     $age = Age::create([
@@ -167,6 +206,14 @@ Route::delete("/admin/eid-events/{event}/delete", function(Event $event) {
 
 
 Route::get("/animal/{animal:slug}", [AnimalController::class, "index"])->name("animal.single");
+
+Route::get("/test", function() {
+    dd(auth()->id());
+});
+
+Route::get("/admin/login", function() {
+    return view("admin.Auth.login");
+})->name("admin.login");
 
 Route::get('/dashboard', function () {
     return view('dashboard');

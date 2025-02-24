@@ -376,6 +376,9 @@ body {
     .mobile-animals {
         display: block;
     }
+    #desktop-pagination {
+        display: none;
+    }
     .mobile-pagination {
         display: block;
     }

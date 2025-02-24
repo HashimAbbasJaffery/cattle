@@ -1109,7 +1109,8 @@ body {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
 }
-.mobile-pagination .pagination {
+.mobile-pagination .pagination,
+.desktop-pagination .pagination {
   background: #f2f0ee;
   border: 1px solid #b6b1a9;
   padding: 5px 10px 5px 10px;
@@ -1117,7 +1118,8 @@ body {
   text-align: center;
   border-radius: 5px;
 }
-.mobile-pagination .pagination {
+.mobile-pagination .pagination,
+.desktop-pagination .pagination {
   background: #f2f0ee;
   border: 1px solid #b6b1a9;
   padding: 5px 10px 5px 10px;
@@ -1126,21 +1128,23 @@ body {
   text-align: center;
   border-radius: 5px;
 }
-.mobile-pagination .pagination:not(.active) {
+.desktop-pagination .pagination:not(.active) {
   transform: scale(0.7) !important;
   opacity: 0.4;
 }
 .mobile-pagination {
   display: none;
 }
-.mobile-pagination .pagination:not(.active) {
-  transform: scale(0.7) !important;
-  opacity: 0.4;
-}
 .mobile-containers, .mobile {
   display: none;
 }
+.desktop-pagination {
+  display: block;
+}
 @media only screen and (max-width: 600px) {
+  .desktop-pagination {
+    display: none;
+  }
     .mobile-slide-category {
         display: block !important;
         font-size: 5px;
