@@ -10,6 +10,7 @@ class Animal extends Model
 {
     use HasFactory;
     protected $with = [ "breed", "age" ];
+    protected $guarded = [ "id", "created_at", "updated_at" ];
 
     public function breed() {
         return $this->belongsTo(Breed::class);

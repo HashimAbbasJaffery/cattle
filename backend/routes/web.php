@@ -83,7 +83,23 @@ Route::get("/admin/animals/create", function() {
     $ages = Age::get();
     $breeds = Breed::get();
     return view("admin.Animals.create", compact("ages", "breeds"));
-});
+})->name("animal.create");
+
+Route::post("/admin/animals/create", function(Request $request) {
+    $data = request()->validate([
+        "name" => [ "required" ],
+        "slug" => [ "required" ],
+        "age_id" => [ "required" ],
+        "breed_id" => [ "required" ],
+        "live_weight" => [ "required" ],
+        "gender" => [ "required" ],
+        "availability" => [ "required" ],
+        "maintenance_fee" => [ "required" ],
+        "price" => [ "required" ],
+    ]);
+    Animal::create($data);
+    return to_route("admin.animals");
+})->name("admin.animals.create");
 
 Route::delete("/admin/animal/{animal}/delete", function(Animal $animal) {
     $animal->delete();
@@ -95,15 +111,41 @@ Route::post("/admin/age/create", function() {
     ]);
     return $age;
 })->name("age.create");
+
 Route::post('/admin/breeds/create', function() {
     $breed = Breed::create([
         "breed" => request()->breed
     ]);
     return $breed;
 });
+
+Route::get("/admin/animal/{animal}/update", function(Animal $animal) {
+    $ages = Age::get();
+    $breeds = Breed::get();
+    $animal->load(["age", "breed"]);
+    return view("admin.Animals.edit", compact("ages", "breeds", "animal"));
+});
+
+Route::put("/admin/animal/{animal}/update", function(Animal $animal) {
+    $data = request()->validate([
+        "name" => [ "required" ],
+        "slug" => [ "required" ],
+        "age_id" => [ "required" ],
+        "breed_id" => [ "required" ],
+        "live_weight" => [ "required" ],
+        "gender" => [ "required" ],
+        "availability" => [ "required" ],
+        "maintenance_fee" => [ "required" ],
+        "price" => [ "required" ],
+    ]);
+    $animal->update($data);
+    return to_route("admin.animals");
+})->name("admin.animals.update");
+
 Route::delete("/admin/breed/{breed}/delete", function(Breed $breed) {
     $breed->delete();
 });
+
 Route::delete("/admin/age/{age}/delete", function(Age $age) {
     $deleted_age = $age;
     $age->delete();
