@@ -18,9 +18,9 @@ Route::get("/", function() {
             "from" => request()->from,
             "to" => request()->to,
             "price" => [request()->from, request()->to],
-            "breed" => request()->breed,
-            "age" => request()->age,
-            "gender" => request()->gender
+            "breed" => is_array(json_decode(request()->breed)) ? json_decode(request()->breed) : request()->breed,
+            "age" => is_array(json_decode(request()->age)) ? json_decode(request()->age) : request()->age,
+            "gender" => is_array(json_decode(request()->gender)) ? json_decode(request()->gender) : request()->gender
         ];
 
         $animals = Animal::filter($filters)->paginate(8)->withQueryString();

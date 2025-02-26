@@ -152,7 +152,7 @@
                     <div class="price-filter">
                         <p class="font-medium">Price</p>
                         <div class="price-range flex justify-between">
-                            <input type="number" placeholder="min">
+                            <input type="number" placeholder="mins">
                             <span class="separator">-</span>
                             <input type="number" placeholder="max">
                         </div>  
@@ -194,16 +194,16 @@
                 <div class="filter price bg-grey">
                     <p class="font-medium">Price</p>
                     <div class="price-range flex justify-between">
-                        <input type="number" placeholder="min">
+                        <input type="number" placeholder="min" v-model="selected_min">
                         <span class="separator">-</span>
-                        <input type="number" placeholder="max">
+                        <input type="number" placeholder="max" v-model="selected_max">
                     </div>
                 </div>
                 <div class="filter breed bg-grey">
                     <p class="font-medium">Breed</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
-                        <label v-for="breed in breeds" :for="breed.breed" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" :id="breed.breed" :class="`breed-checkbox`" />
+                        <label v-for="breed in breeds" :for="`breed-${breed.breed}`" class="flex items-center" style="width: 45.33%;">
+                            <input type="checkbox" v-model="selected_breeds" :value="breed.id" :id="`breed-${breed.breed}`" :class="`breed-checkbox`" />
                             <p class="ml-1" v-text="breed.breed"></p>
                         </label>
                     </div>
@@ -211,8 +211,8 @@
                 <div class="filter age bg-grey">
                     <p class="font-medium">Age</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
-                        <label :for="age.age" v-for="age in ages" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" :id="age.age" class="breed-checkbox" />
+                        <label :for="`age-${age.age}`" v-for="age in ages" class="flex items-center" style="width: 45.33%;">
+                            <input type="checkbox" v-model="selected_ages" :value="age.id" :id="`age-${age.age}`" class="breed-checkbox" />
                             <p class="ml-1" v-text="age.age"></p>
                         </label>
                     </div>
@@ -221,11 +221,11 @@
                     <p class="font-medium">Gender</p>
                     <div class="breeds flex gap-3 flex-wrap justify-between">
                         <label for="male" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="male" class="breed-checkbox" />
+                            <input type="checkbox" v-model="selected_gender" value="0" id="male" class="breed-checkbox" />
                             <p class="ml-1">Male</p>
                         </label>
                         <label for="brahmand" class="flex items-center" style="width: 45.33%;">
-                            <input type="checkbox" id="brahmand" class="breed-checkbox" />
+                            <input type="checkbox" v-model="selected_gender" value="1" id="brahmand" class="breed-checkbox" />
                             <p class="ml-1">Female</p>
                         </label>
                     </div>
@@ -234,9 +234,9 @@
             <div class="animals mt-6">
                 <p class="mb-3">{{ number_format($animals->count()) }} Animals available</p>
                 <div class="" id="animals">
-                    <div v-for="animal in animals.data" class="animal flex" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px;">
-                        <div class="animal-image justify-end relative" style="width: 40%;">
-                            <swiper-container class="test" pagination="true" navigation="true" class="text-red-400 bg-sold/40" style="background-blend-mode: darken; border-top-left-radius: 10px; --swiper-navigation-size: 20px">
+                    <div @click="goToAnimal(`/animal/${animal.slug}`)" v-for="animal in animals.data" class="animal flex" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px;">
+                        <div class="animal-image justify-end relative" :class="{ 'sold': !animal.availability }" style="z-index: 1; width: 40%;">
+                            <swiper-container class="test" pagination="true" navigation="true" class="text-red-400" style="background-blend-mode: darken; border-top-left-radius: 10px; --swiper-navigation-size: 20px">
                                 <swiper-slide>
                                     <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
                                 </swiper-slide>
@@ -247,8 +247,8 @@
                                     <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
                                 </swiper-slide>
                             </swiper-container>
-                            <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" style="border-bottom-left-radius: 10px;">
-                                <p style="color: white;" class="font-medium">ID: 000-000-000</p>
+                            <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" :style="{ 'background-color': !animal.availability ? '#6D2828' : '' }" style="border-bottom-left-radius: 10px;">
+                                <p style="color: white;" class="font-medium" v-text="!animal.availability ? 'SOLD' : 'ID: 000-000-000'">ID: 000-000-000</p>
                             </div>
                         </div>
                         <div class="animal-info" style="width: 60%; line-height: 27px;">
@@ -282,10 +282,11 @@
             <div class="mobile-animals" style="padding-left: 20px; width: 100%; padding-right: 20px;">
                 <a v-for="animal in animals.data" :href="`/animal/${animal.slug}`" class="animal-link">
                     <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
-                        <div class="mobile-animal-image" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px; ">
+                        <div class="mobile-animal-image relative" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px;">
+                            <div class="sold absolute" v-if="!animal.availability" style="z-index: 1; width: 100%; height: 100%;">&nbsp;</div>
                             <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
                             <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                                <p style="color: white;text-align: center;font-size: 10px !important;">ID: 000-000-000</p>
+                                <p style="color: white;text-align: center;font-size: 10px !important;" :style="{ 'background': !animal.availability ? '#6D2828' : '' }" v-text="!animal.availability ? 'SOLD' : 'ID: 000-000-000'">ID: 000-000-00</p>
                             </div>
                         </div>
                         <div class="animal-info" style="width: 109.5%;">
@@ -341,6 +342,11 @@
             createApp({
               data() {
                 return {
+                    selected_breeds: [],
+                    selected_ages: [],
+                    selected_gender: [],
+                    selected_min: 0,
+                    selected_max: 0,
                     is_loading: false,
                     is_filtering: false,
                     search: "",
@@ -376,6 +382,43 @@
               },
 
               watch: {
+                async selected_breeds(newValue) {
+                    const response = await axios.get("/", {
+                        params: {
+                            breed: JSON.stringify(this.selected_breeds),
+                            age: JSON.stringify(this.selected_ages),
+                            gender: JSON.stringify(this.selected_gender)
+                        }
+                    });
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">"
+                },
+                async selected_ages(newValue) {
+                    const response = await axios.get("/", {
+                        params: {
+                            breed: JSON.stringify(this.selected_breeds),
+                            age: JSON.stringify(this.selected_ages),
+                            gender: JSON.stringify(this.selected_gender)
+                        }
+                    })
+                    console.log(response);
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">";
+                },
+                async selected_gender(newValue) {
+                    const response = await axios.get("/", {
+                        params: {
+                            breed: JSON.stringify(this.selected_breeds),
+                            age: JSON.stringify(this.selected_ages),
+                            gender: JSON.stringify(this.selected_gender)
+                        }
+                    })
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">";
+                },
                 async search() {
                     const response = await axios.get("/", {
                         params: {
@@ -394,6 +437,9 @@
               },
 
               methods: {
+                goToAnimal(url) {
+                    window.location = url;
+                },
                 async changePage(url) {
                     const response = await axios.get(url);
                     this.animals = response.data; 

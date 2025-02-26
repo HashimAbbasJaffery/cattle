@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 
 class Animal extends Model
 {
@@ -36,23 +37,60 @@ class Animal extends Model
         $query->when($filters["price"] ?? null, function() use ($query, $filters) {
             $query->whereBetween("price", [ $filters["price"][0] ?? PHP_INT_MIN, $filters["price"][1] ?? PHP_INT_MAX ]);
         });
-
         // Breed Filter
-        $query->when($filters["breed"] ?? null, function() use ($query, $filters) {
+        // $query->when($filters["breed"] ?? null, function ($q) use ($filters) {
+        //     if (is_array($filters["breed"]) && !empty($filters["breed"])) {
+        //         $q->whereIn("breed_id", $filters["breed"]);
+        //     } else {
+        //         $q->where("breed_id", $filters["breed"]);
+        //     }
+        // });
+
+        $query->when($filters["breed"] ?? null, function($query) use ($filters) {
+            Log::info($filters["breed"]);
             $query->whereHas("breed", function($query) use($filters) {
-                $query->where("breed", $filters["breed"]);
+                if(is_array($filters["breed"])) {
+                    $query->whereIn("id", $filters["breed"]);
+                } else {
+                    $query->where("breed", $filters["breed"]);
+                }
             });
         });
 
-        // Age Filter
-        $query->when($filters["age"] ?? null, function() use ($query, $filters) {
+        $query->when($filters["age"] ?? null, function($query) use ($filters) {
             $query->whereHas("age", function($query) use($filters) {
-                $query->where("age", $filters["age"]);
+                if(is_array($filters["age"])) {
+                    $query->whereIn("id", $filters["age"]);
+                } else {
+                    $query->where("age", $filters["age"]);
+                }
             });
         });
 
-        $query->when(isset($filters["gender"]), function() use ($query, $filters) {
-            $query->where("gender", $filters["gender"]);
+        $query->when($filters["gender"] ?? null, function($query) use($filters) {
+            if(is_array($filters["gender"])) {
+                $query->whereIn("gender", $filters["gender"]);
+            } else {
+                $query->where("gender", $filters["gender"]);
+            }
         });
+        
+
+        // // Age Filter
+        // $query->when($filters["age"] ?? null, function() use ($query, $filters) {
+        //     if(is_array($filters["age"]) && !empty($filters["age"])) {
+        //         $query->whereIn("age_id", $filters["age"]);
+        //     } else {
+        //         $query->where("age_id", $filters["age"]);
+        //     }
+        // });
+
+        // $query->when(isset($filters["gender"]), function() use ($query, $filters) {
+        //     if(is_array($filters["gender"]) && !empty($filters["gender"])) {
+        //         $query->whereIn("gender", $filters["gender"]);
+        //     } else {
+        //         $query->where("gender", $filters["gender"]);
+        //     }
+        // });
     }
 }

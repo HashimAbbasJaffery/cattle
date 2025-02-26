@@ -117,9 +117,15 @@
                             <img src="{{ asset('assets/images/cow3.jpg') }}">
                         </swiper-slide>
                     </swiper-container>
-                    <div class="cow-id bg-green" style="border-bottom-right-radius: 25px !important; border-bottom-left-radius: 25px !important;">
-                        <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">ID: 000-000-000</p>
-                    </div>
+                    @if($animal->availability)
+                        <div class="cow-id bg-green" style="border-bottom-right-radius: 25px !important; border-bottom-left-radius: 25px !important;">
+                            <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">ID: 000-000-000</p>
+                        </div>
+                    @else
+                        <div class="cow-id" style="background: #6D2828; border-bottom-right-radius: 25px !important; border-bottom-left-radius: 25px !important;">
+                            <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">SOLD</p>
+                        </div>
+                    @endif
                     <div class="mobile-containers relative" style="padding-left: 20px;">
                         <div class="mobile-left-container">
                             <h1 style="margin-top: 15px; font-weight: 600; font-size: 5.7vw;">{{ $animal->name }}</h1>
@@ -443,13 +449,19 @@
             </div>
         </section>
         <section id="buttons" class="container mx-auto z-1" style="background: white; padding-top: 10px; padding-bottom: 10px;">
-            <div class="purchase flex mb-3 gap-2">
-                <button class="bg-green w-1/2 p-2 rounded-full" style="color: white;" @click="selectCash">Cash</button>
-                <button class="bg-green w-1/2 rounded-full" style="color: white;" @click="selectInstallment">Installment</button>
-            </div>
-            <div class="contact">
-                <button class="bg-green w-full p-2 rounded-full" style="color: white; height: 40px !important;">Whatsapp</button>
-            </div>
+            @if($animal->availability)
+                <div class="purchase flex mb-3 gap-2">
+                    <button class="bg-green w-1/2 p-2 rounded-full" style="color: white;" @click="selectCash">Cash</button>
+                    <button class="bg-green w-1/2 rounded-full" style="color: white;" @click="selectInstallment">Installment</button>
+                </div>
+                <div class="contact">
+                    <button class="bg-green w-full p-2 rounded-full" style="color: white; height: 40px !important;">Whatsapp</button>
+                </div>
+            @else
+                <div class="contact">
+                    <button class="w-full p-2 rounded-full" style="background: #6D2828; color: white; height: 40px !important;">SOLD</button>
+                </div>
+            @endif
         </section>
     </main>
     @push('scripts')
