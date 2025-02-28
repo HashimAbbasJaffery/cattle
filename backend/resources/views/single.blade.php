@@ -108,18 +108,15 @@
                 <div class="cow-image">
                     <swiper-container navigation="true" pagination="true" loop="true" style=" --swiper-navigation-size: 20px">
                         <swiper-slide>
-                            <img src="{{ asset('assets/images/cow.jpg') }}">
+                            <img src="{{ asset($animal->front_image) }}">
                         </swiper-slide>
                         <swiper-slide>
-                            <img src="{{ asset('assets/images/cow2.jpg') }}">
-                        </swiper-slide>
-                        <swiper-slide>
-                            <img src="{{ asset('assets/images/cow3.jpg') }}">
+                            <img src="{{ asset($animal->back_image) }}">
                         </swiper-slide>
                     </swiper-container>
                     @if($animal->availability)
                         <div class="cow-id bg-green" style="border-bottom-right-radius: 25px !important; border-bottom-left-radius: 25px !important;">
-                            <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">ID: 000-000-000</p>
+                            <p style="color: white; font-size: 20px; font-weight: 500;" class="text-center">ID: {{ $animal->cow_id }}</p>
                         </div>
                     @else
                         <div class="cow-id" style="background: #6D2828; border-bottom-right-radius: 25px !important; border-bottom-left-radius: 25px !important;">
@@ -318,9 +315,6 @@
                                     <swiper-slide>
                                         <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
                                     </swiper-slide>
-                                    <swiper-slide>
-                                        <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
-                                    </swiper-slide>
                                 </swiper-container>
                                 <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" style="border-bottom-left-radius: 10px;">
                                     <p style="color: white;" class="font-medium">ID: 000-000-000</p>
@@ -362,13 +356,10 @@
                             <div class="animal-image justify-end relative" >
                                 <swiper-container class="test" class="text-red-400 bg-sold/40" style="background-blend-mode: darken; border-top-left-radius: 10px; --swiper-navigation-size: 20px">
                                     <swiper-slide>
-                                        <img src="{{ asset('assets/images/cow4.jpg') }}" />
+                                        <img src="{{ asset($animal->front_image) }}" />
                                     </swiper-slide>
                                     <swiper-slide>
-                                        <img src="{{ asset('assets/images/cow4.jpg') }}" />
-                                </swiper-slide>
-                                    <swiper-slide>
-                                        <img src="{{ asset('assets/images/cow4.jpg') }}" />
+                                        <img src="{{ asset($animal->back_image) }}" />
                                 </swiper-slide>
                                 </swiper-container>
                                 <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" style="border-bottom-left-radius: 10px;">

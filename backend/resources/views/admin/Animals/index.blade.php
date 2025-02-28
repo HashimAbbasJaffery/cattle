@@ -8,12 +8,15 @@
                 <div class="card-body">
                     <div style="display: flex; justify-content: space-between;">
                         <h4 class="card-title">Animals List</h4>
-                        <a href="{{ route('animal.create') }}" style="text-decoration: none;" class="btn-info btn-sm" >Create New Animal</a>
+                        @if(auth()->user()->role === "admin")
+                            <a href="{{ route('animal.create') }}" style="text-decoration: none;" class="btn-info btn-sm" >Create New Animal</a>
+                        @endif
                     </div>
                     <input type="text" v-model="keyword" class="form-control" style="width: 30%;" placeholder="Search Animal" />
                     <table class="table" style="width: 100%;">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Breed</th>
                             <th>Age</th>
@@ -24,6 +27,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="animal in animals" :key="animal.id">
+                            <td v-text="animal.cow_id"></td>
                             <td v-text="animal.name"></td>
                             <td v-text="animal.breed.breed"></td>
                             <td v-text="animal.age.age"></td>
@@ -31,7 +35,9 @@
                             <td v-text="animal.availability == '1' ? 'Available' : 'Sold'"></td>
                             <td>
                                 <a :href="`/admin/animal/${animal.id}/update`" class="btn btn-primary btn-sm" style="margin-right: 10px;">Update</a>
-                                <button class="btn btn-danger btn-sm" @click="killAnimal(animal.id)" style="margin-right: 10px;">Delete</button>
+                                @if(auth()->user()->role === "admin")
+                                    <button class="btn btn-danger btn-sm" @click="killAnimal(animal.id)" style="margin-right: 10px;">Delete</button>
+                                @endif
                             </td>
                         </tr>
                     </tbody>

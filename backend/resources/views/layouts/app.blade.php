@@ -73,30 +73,32 @@
                 <i class="mdi mdi-cow menu-icon "></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('admin.users') }}">
-                <span class="menu-title">Users</span>
-                <i class="mdi mdi-account menu-icon "></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('admin.categories') }}">
-                <span class="menu-title">Categories</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('events') }}">
-                <span class="menu-title">Eid Events</span>
-                <i class="mdi mdi-calendar menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('admin.settings') }}">
-                <span class="menu-title">Settings</span>
-                <i class="mdi mdi-settings menu-icon"></i>
-              </a>
-            </li>
+            @if(auth()->user()->role === "admin")
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.users') }}">
+                  <span class="menu-title">Users</span>
+                  <i class="mdi mdi-account menu-icon "></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.categories') }}">
+                  <span class="menu-title">Categories</span>
+                  <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('events') }}">
+                  <span class="menu-title">Eid Events</span>
+                  <i class="mdi mdi-calendar menu-icon"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.settings') }}">
+                  <span class="menu-title">Settings</span>
+                  <i class="mdi mdi-settings menu-icon"></i>
+                </a>
+              </li>
+            @endif
           </ul>
         </nav>
         <!-- partial -->

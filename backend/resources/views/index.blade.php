@@ -235,20 +235,18 @@
                 <p class="mb-3">{{ number_format($animals->count()) }} Animals available</p>
                 <div class="" id="animals">
                     <div @click="goToAnimal(`/animal/${animal.slug}`)" v-for="animal in animals.data" class="animal flex" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px;">
-                        <div class="animal-image justify-end relative" :class="{ 'sold': !animal.availability }" style="z-index: 1; width: 40%;">
+                        <div class="animal-image justify-end relative" :class="{ 'sold': !animal.availability }" style="z-index: 1; width: 211px;">
                             <swiper-container class="test" pagination="true" navigation="true" class="text-red-400" style="background-blend-mode: darken; border-top-left-radius: 10px; --swiper-navigation-size: 20px">
                                 <swiper-slide>
-                                    <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
+                                    <img :src="animal.front_image" style="height: 176px;" />
                                 </swiper-slide>
                                 <swiper-slide>
-                                    <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
-                                </swiper-slide>
-                                <swiper-slide>
-                                    <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url('assets/images/cow.jpg'); height: 177px; width: 100%; background-size: cover;"></div>
+                                    <img :src="animal.front_image" />
+                                    {{-- <div class="image" loading="lazy" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px; background-image: url(); height: 177px; width: 100%; background-size: cover;"></div> --}}
                                 </swiper-slide>
                             </swiper-container>
                             <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" :style="{ 'background-color': !animal.availability ? '#6D2828' : '' }" style="border-bottom-left-radius: 10px;">
-                                <p style="color: white;" class="font-medium" v-text="!animal.availability ? 'SOLD' : 'ID: 000-000-000'">ID: 000-000-000</p>
+                                <p style="color: white;" class="font-medium" v-text="!animal.availability ? 'SOLD' : 'ID: ' + animal.cow_id"></p>
                             </div>
                         </div>
                         <div class="animal-info" style="width: 60%; line-height: 27px;">
@@ -284,9 +282,9 @@
                     <div class="mobile-animal flex mt-4" style="border-radius: 5px; width: 100%;">
                         <div class="mobile-animal-image relative" style="padding-right: 0px; width: 40%px; border-top-left-radius: 50px;">
                             <div class="sold absolute" v-if="!animal.availability" style="z-index: 1; width: 100%; height: 100%;">&nbsp;</div>
-                            <img src="./assets/images/cow4.jpg" style="border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
+                            <img :src="animal.front_image ? '/' + animal.front_image : './assets/images/cow4.jpg'" style="width: 100%; border-radius: 0px !important; height: 106px; border-top-left-radius: 5px !important;" alt="">
                             <div class="mobile-cow-id bg-green" style="border-bottom-left-radius: 5px; width: 136px;">
-                                <p style="color: white;text-align: center;font-size: 10px !important;" :style="{ 'background': !animal.availability ? '#6D2828' : '' }" v-text="!animal.availability ? 'SOLD' : 'ID: 000-000-000'">ID: 000-000-00</p>
+                                <p style="color: white;text-align: center;font-size: 10px !important;" :style="{ 'background': !animal.availability ? '#6D2828' : '' }" v-text="!animal.availability ? 'SOLD' : 'ID: ' + animal.cow_id"></p>
                             </div>
                         </div>
                         <div class="animal-info" style="width: 109.5%;">

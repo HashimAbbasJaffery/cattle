@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Log;
@@ -12,6 +13,17 @@ class Animal extends Model
     use HasFactory;
     protected $with = [ "breed", "age" ];
     protected $guarded = [ "id", "created_at", "updated_at" ];
+
+    protected function frontImage() :Attribute{
+        return Attribute::make(
+            get: fn(?string $value) => "storage/$value"
+        );
+    }
+    protected function backImage() :Attribute {
+        return Attribute::make(
+            get: fn(?string $value) => "storage/$value"
+        );
+    }
 
     public function breed() {
         return $this->belongsTo(Breed::class);

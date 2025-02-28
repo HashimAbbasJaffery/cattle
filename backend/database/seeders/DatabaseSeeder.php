@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         Age::factory()->createMany([
             [ "age" => "below 1 year" ],
             [ "age" => "2 Teeth" ],
-            [ "age" => "4 Teeth" ],
+            [ "age" => "4 Teeth" ], 
             [ "age" => "6 Teeth" ],
             [ "age" => "6 Teeth+" ],
         ]);

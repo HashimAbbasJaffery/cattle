@@ -4,9 +4,14 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Create Animal</h4>
-                <form action="{{ route('admin.animals.create') }}" method="POST">
+                {{ $errors }}
+                <form action="{{ route('admin.animals.create') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
+                        <div class="form-group col-6">
+                            <label for="name">ID</label>
+                            <input type="text" v-model="cow_id" class="form-control" name="cow_id" id="cow_id" placeholder="Animal Id">
+                        </div>
                         <div class="form-group col-6">
                             <label for="name">Name</label>
                             <input type="text" v-model="name" class="form-control" name="name" id="name" placeholder="Name">
@@ -62,6 +67,14 @@
                             <label for="price">Price to Be Displayed</label>
                             <input type="text" class="form-control" v-model="displayed_price" name="price_to_be_displayed" id="price" placeholder="Price to be displayed to User" readonly>
                         </div>
+                        <div class="form-group col-6">
+                            <label for="name">Front Image</label>
+                            <input type="file" class="form-control" name="front_image" id="front_image">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="name">Back Image</label>
+                            <input type="file" class="form-control" name="back_image" id="back_image">
+                        </div>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary btn-sm">Create</button>
@@ -78,7 +91,10 @@
                 name: "",
                 slug: "",
                 price: 0,
-                displayed_price: 0
+                displayed_price: 0,
+                cow_id: null,
+                front_image: "",
+                back_image: ""
             }
         },
         watch: {
