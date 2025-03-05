@@ -8,6 +8,7 @@
                         @csrf
                         {{ method_field('PUT') }}
                         <div class="row">
+                            <p>fd</p>
                             @if(auth()->user()->role === "admin")
                                 <div class="form-group col-6">
                                     <label for="name">ID</label>

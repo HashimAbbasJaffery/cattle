@@ -177,13 +177,6 @@
         <section id="top">
             <div class="bg-cream breadcrumbs container flex justify-between items-end">
                 <p>Home</p>
-                <div class="view flex gap-2 mb-3 items-start">
-                    <span>View: </span>
-                    <div class="flex gap-2">
-                        <img id="grid" class="opacity-25" src="./assets/images/grid.png">
-                        <img id="list" class="active opacity-25" src="./assets/images/list.png">
-                    </div>
-                </div>
             </div>
         </section>
         <section class="container bg-cream flex justify-between">
@@ -251,7 +244,7 @@
                         </div>
                         <div class="animal-info" style="width: 60%; line-height: 27px;">
                             <h1 class="mt-3 px-3" v-text="animal.name"></h1>
-                            <p class="font-medium px-3">PKR <span v-text="animal.price"></span>/-</p>
+                            <p class="font-medium px-3">PKR <span v-text="animal.displayed_price.toLocaleString('en-US')"></span>/-</p>
                             <p class="px-3"><span v-text="animal.live_weight"></span> KG (Live Weight)</p>
                             <div class="categories flex gap-3 mt-8 items-center">
                                 <div class="breed category pl-3">
@@ -291,7 +284,7 @@
                             <div class="flex flex-col justify-between" style="width: 100%; height: 100%;">
                                 <div class="card-header" style="line-height: 19px;">
                                     <h1 style="padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;" v-text="animal.name"></h1>
-                                    <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR <span v-text="animal.price <= 100000 ? (animal.price * 2).toLocaleString('en-US') : animal.price"></span>/-</p>
+                                    <p style="font-weight: 500; padding-left: 10px; font-size: 4.1vw !important; font-weight: 580;">PKR <span v-text="animal.displayed_price.toLocaleString('en-US')"></span>/-</p>
                                     <p style="padding-left: 10px; font-size: 4.1vw !important;"><span v-text="animal.live_weight"></span> KG (live weight)</p>
                                 </div>
                                 <div>
@@ -380,6 +373,37 @@
               },
 
               watch: {
+                async selected_min() {
+                    if(!this.selected_min || !this.selected_max) return;
+
+                    const response = await axios.get("/", {
+                        params: {
+                            breed: JSON.stringify(this.selected_breeds),
+                            age: JSON.stringify(this.selected_ages),
+                            gender: JSON.stringify(this.selected_gender),
+                            from: this.selected_min,
+                            to: this.selected_max
+                        }
+                    });
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">"
+                },
+                async selected_max() {
+                    if(!this.selected_min || !this.selected_max) return;
+                    const response = await axios.get("/", {
+                        params: {
+                            breed: JSON.stringify(this.selected_breeds),
+                            age: JSON.stringify(this.selected_ages),
+                            gender: JSON.stringify(this.selected_gender),
+                            from: this.selected_min,
+                            to: this.selected_max
+                        }
+                    });
+                    this.animals = response.data;
+                    this.animals.links[0].label = "<";
+                    this.animals.links[this.animals.links.length - 1].label = ">"
+                },
                 async selected_breeds(newValue) {
                     const response = await axios.get("/", {
                         params: {

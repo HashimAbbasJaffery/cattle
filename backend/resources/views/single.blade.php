@@ -3,6 +3,7 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
 
@@ -126,7 +127,7 @@
                     <div class="mobile-containers relative" style="padding-left: 20px;">
                         <div class="mobile-left-container">
                             <h1 style="margin-top: 15px; font-weight: 600; font-size: 5.7vw;">{{ $animal->name }}</h1>
-                            <p class="mobile-price" style="font-weight: 600;" v-text="'PKR ' + numberWithCommas(price) + '/-'"></p>
+                            <p class="mobile-price" style="font-weight: 600;">PKR {{ number_format($animal->displayed_price) }}/-</p>
                             <div class="live-weight flex items-center">
                                 <p class="mr-5" style="font-size: 13px;">{{ $animal->live_weight }}kg live weight</p>
                                 <div class="flex items-center">
@@ -208,10 +209,10 @@
                             </p>
                         </div>
                         <div id="desclaimer" style="margin-top: 10px;">
-                            <h1 style="font-weight: 500; text-transform: uppercase; margin-bottom: 3px; font-size: 2.5vw; ">Desclaimer:</h1>
+                            <h1 style="font-weight: 500; text-transform: uppercase; margin-bottom: 3px; font-size: 2.5vw; ">Disclaimer:</h1>
                             <p style="font-size: 2vw;">
                                 Running a cattle operation comes with various challenges that may 
-                                impact the...<span style="color: #5380cf;">read more</span>
+                                impact the...<span style="color: #5380cf;" @click="readMore">read more</span>
                             </p>
                         </div>
                     </div>
@@ -251,10 +252,10 @@
                 </div>
             </div>
             <div class="right-container w-1/2">
-                <h1 class="pl-4">Moti</h1>
-                <p class="cow-price pl-4">PKR 460,000/-</p>
+                <h1 class="pl-4">{{ $animal->name }}</h1>
+                <p class="cow-price pl-4">PKR {{ number_format($animal->displayed_price) }}/-</p>
                 <p class="weight flex items-center pl-4">
-                    <span class="mr-9">135kg live weight</span>
+                    <span class="mr-9">{{ $animal->live_weight }}kg live weight</span>
                     <span class="icons flex items-center">
                         <i class="fa fa-circle text-danger-glow blink mr-4" style="font-size: 20px;"></i>
                         <img src="{{ asset('assets/images/weight.png') }}" style="width: 35px; height: 35px;" />
@@ -264,15 +265,15 @@
                     <div class="categories w-1/3 single-cow-category space-y-3 pl-4">
                         <div class="breed flex justify-between">
                             <p>Breed</p>
-                            <p>Cholistani</p>
+                            <p>{{ $animal->breed->breed }}</p>
                         </div>
                         <div class="gender flex justify-between">
                             <p>Gender</p>
-                            <p>Male</p>
+                            <p>{{ $animal->gender == 0 ? "Male" : 'Female' }}</p>
                         </div>
                         <div class="age flex justify-between">
                             <p>Age</p>
-                            <p>3 Teeth</p>
+                            <p>{{ $animal->age->age }}</p>
                         </div>
                     </div>
                     <div class="installment-badge bg-green">
@@ -295,7 +296,7 @@
                     <h1>Disclaimer</h1>
                     <p>
                         Running a cattle operation comes with various challenges 
-                        that may impact the...<a href="#">Read more</a>
+                        that may impact the...<a @click="readMore()">Read more</a>
                     </p>
                 </div>
             </div>
@@ -322,7 +323,7 @@
                             </div>
                             <div class="animal-info" style="width: 60%; line-height: 27px;">
                                 <h1 class="" style="margin-bottom: 0px; margin-top: 3px; text-transform: uppercase; font-size: 18px !important;">{{ $more_animal->name }}</h1>
-                                <p class="font-medium px-3">PKR {{ number_format($more_animal->price) }}/-</p>
+                                <p class="font-medium px-3">PKR {{ number_format($more_animal->displayed_price) }}/-</p>
                                 <p class="px-3" style="font-size: 14px !important">{{ $more_animal->live_weight }} KG (Live Weight)</p>
                                 <div class="categories flex gap-3 mt-8 items-center" style="padding-top: 0px;">
                                     <div class="breed category pl-3">
@@ -351,15 +352,15 @@
             </swiper-container>
              <swiper-container class="animals flex justify-between mobile" style="padding-left: 20px; padding-right: 20px;" loop="true"  slides-per-view="2" space-between="10" style="width: 100%;">
                 @foreach($more_animals as $more_animal)
-                    <swiper-slide style="width: 100%; margin-top: 10px !important;">
+                    <swiper-slide style="width: 100%; margin-top: 10px !important;" @click="gotoAnimal('{{ route('animal.single', [ 'animal' => $more_animal->slug ]) }}')">
                         <div class="animal flex grid mr-3" style="background-color: #ebe7e1; border-radius: 10px; margin-bottom: 10px; width: 95%;">
                             <div class="animal-image justify-end relative" >
                                 <swiper-container class="test" class="text-red-400 bg-sold/40" style="background-blend-mode: darken; border-top-left-radius: 10px; --swiper-navigation-size: 20px">
                                     <swiper-slide>
-                                        <img src="{{ asset($animal->front_image) }}" />
+                                        <img src="{{ asset($more_animal->front_image) }}" />
                                     </swiper-slide>
                                     <swiper-slide>
-                                        <img src="{{ asset($animal->back_image) }}" />
+                                        <img src="{{ asset($more_animal->back_image) }}" />
                                 </swiper-slide>
                                 </swiper-container>
                                 <div class="cow-id bg-green text-center z-100 bottom-0 w-full absolute" style="border-bottom-left-radius: 10px;">
@@ -368,7 +369,7 @@
                             </div>
                             <div class="animal-info" style="width: 60%; line-height: 27px;">
                                 <h1 class="" style="height: 3.5vw !important; margin-bottom: 0px; margin-top: 0px; text-transform: uppercase; font-size: 3vw !important; font-weight: 600; margin-bottom: 0px !important; padding-bottom: 0px !important; height: 16px;">{{ $more_animal->name }}</h1>
-                                <p class="font-medium px-3;" style="height: 3.5vw !important; font-size: 3vw;">PKR {{ number_format($more_animal->price) }}/-</p>
+                                <p class="font-medium px-3;" style="height: 3.5vw !important; font-size: 3vw;">PKR {{ number_format($more_animal->displayed_price) }}/-</p>
                                 <p class="px-3" style="font-size: 2.7vw !important; height: 3.5vw !important;">{{ $more_animal->live_weight }} KG (Live Weight)</p>
                                 <div class="categories flex justify-center gap-3 mt-8 items-center" style="padding-top: 0px;">
                                     <div class="breed category">
@@ -400,6 +401,7 @@
                     <div @click="is_boarding = true" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': is_boarding }" :style="{ 'color': is_boarding ? 'white': 'black' }" style="height: 40px !important;">Boarding Service</div>
                     <div @click="is_boarding = false" class="option w-1/2 text-center flex justify-center items-center rounded-full" :class="{ 'bg-green': !is_boarding }" :style="{ 'color': is_boarding ? 'black': 'white' }" style="height: 40px !important;">Delivery</div>
                 </div>
+                <i class="fa-solid fa-xmark" style="float: right;" @click="show = false"></i>
                 <h1>Requirement for Eid-ul-Azha</h1>
                 <p>
                     Eid-ul-Azha: 
@@ -429,7 +431,7 @@
                 <p class="flex justify-between"><span>Breed:</span> {{ $animal->breed->breed }}</p>
                 <p class="flex justify-between"><span>Age:</span> {{ $animal->age->age }}</p>
                 <h1>Pricing</h1>
-                <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100) }}/-</p>
+                <p class="flex justify-between" v-if="is_cash"><span>Cash:</span> PKR {{ number_format($animal->displayed_price) }}/-</p>
                 <p class="flex justify-between" v-else><span>Installment:</span> <span v-text="'PKR ' + numberWithCommas((parseFloat(installment) + parseFloat(maintenance)).toFixed(0)) + '/month'"></span></p>
                 <p class="flex justify-between" v-if="is_boarding || !is_cash"><span>Maintenance Fee per Month:</span> PKR {{ number_format($animal->maintenance_fee) }}/-</p>
                 <p class="flex justify-between" v-if="!is_boarding && is_cash"><span>Delivery Charges:</span> <span v-text="((distance * 150).toFixed(0)) + '/-'"></span></p>
@@ -470,7 +472,7 @@
                     months: 12,
                     is_boarding: true,
                     originalPrice: '{{ $animal->price }}',
-                    price: '{{ $animal->price <= 100_000 ? $animal->price * $setting->add_if_less_than_criteria : $animal->price + ($setting->add_if_above_criteria * $animal->price) / 100 }}',
+                    price: '{{ $animal->displayed_price }}',
                     maintenance: '{{ $animal->maintenance_fee }}',
                     installment: null,
                     percentage: '{{ $setting->add_if_above_criteria }}',
@@ -540,6 +542,22 @@
                 }
             },
               methods: {
+                gotoAnimal(url) {
+                    window.location = url;
+                },
+                readMore() {
+                    Swal.fire({
+                        title: "Disclaimer",
+                        html: '<p>This is a disclaimer message. Please read carefully.</p>',
+                        inputAttributes: {
+                            autocapitalize: "off"
+                        },
+                        confirmButtonText: "Ok",
+                        allowOutsideClick: () => !Swal.isLoading()
+                        }).then((result) => {
+
+                        });
+                },
                 setCurrentLocation() {
                     if ("geolocation" in navigator) {
                         navigator.geolocation.getCurrentPosition(

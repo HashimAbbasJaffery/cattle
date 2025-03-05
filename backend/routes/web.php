@@ -53,7 +53,6 @@ Route::middleware('auth')->group(function () {
         $data = request()->validate([
             "add_if_less_than_criteria" => [ "required" ],
             "add_if_above_criteria" => [ "required" ],
-            "price_per_km" => [ "required" ]
         ]);
         $setting = (Setting::first())->update($data);
         return back();
@@ -83,9 +82,10 @@ Route::middleware('auth')->group(function () {
     })->name("admin.animals");
     
     Route::get("/admin/animals/create", function() {
+        $settings = Setting::first();
         $ages = Age::get();
         $breeds = Breed::get();
-        return view("admin.Animals.create", compact("ages", "breeds"));
+        return view("admin.Animals.create", compact("ages", "breeds", "settings"));
     })->name("animal.create");
     
     Route::post("/admin/animals/create", function(Request $request) {
@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
             "availability" => [ "required" ],
             "maintenance_fee" => [ "required" ],
             "price" => [ "required" ],
+            "displayed_price" => [ "required" ],
             "front_image" => [ "required" ],
             "back_image" => [ "required" ]
         ]);
@@ -135,10 +136,11 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::get("/admin/animal/{animal}/update", function(Animal $animal) {
+        $settings = Setting::first();
         $ages = Age::get();
         $breeds = Breed::get();
         $animal->load(["age", "breed"]);
-        return view("admin.Animals.edit", compact("ages", "breeds", "animal"));
+        return view("admin.Animals.edit", compact("ages", "breeds", "animal", "settings"));
     });
     
     Route::put("/admin/animal/{animal}/update", function(Animal $animal) {

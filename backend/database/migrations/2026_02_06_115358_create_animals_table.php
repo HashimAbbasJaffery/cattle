@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean("availability")->default(0);
             $table->string("slug");
             $table->float("price");
+            $table->float("displayed_price")->nullable();
             $table->string("cow_id")->default("000-000-000");
             $table->string("front_image")->nullable();
             $table->string("back_image")->nullable();

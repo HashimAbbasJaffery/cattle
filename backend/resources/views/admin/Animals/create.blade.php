@@ -3,8 +3,8 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
+                {{$errors}}
                 <h4 class="card-title">Create Animal</h4>
-                {{ $errors }}
                 <form action="{{ route('admin.animals.create') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
@@ -65,7 +65,7 @@
                         </div>
                         <div class="form-group col-6">
                             <label for="price">Price to Be Displayed</label>
-                            <input type="text" class="form-control" v-model="displayed_price" name="price_to_be_displayed" id="price" placeholder="Price to be displayed to User" readonly>
+                            <input type="text" class="form-control" v-model="displayed_price" name="displayed_price" id="price" placeholder="Price to be displayed to User" readonly>
                         </div>
                         <div class="form-group col-6">
                             <label for="name">Front Image</label>
@@ -103,9 +103,9 @@
             },
             price() {
                 if(parseInt(this.price) <= 100000) {
-                    this.displayed_price = this.price * 2;
+                    this.displayed_price = this.price * {{ $settings->add_if_less_than_criteria }};
                 } else {
-                    this.displayed_price = this.price * 1.4;
+                    this.displayed_price = this.price * {{ $settings->add_if_above_criteria }};
                 }
             }
         }

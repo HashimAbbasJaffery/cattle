@@ -42,24 +42,15 @@ class Animal extends Model
 
         // Pricing Filter
         $query->when(isset($filters["from"]) && isset($filters["to"]), function() use ($query, $filters) {
-            $query->whereBetween("price", [ $filters["from"], $filters["to"] ]);
+            $query->whereBetween("displayed_price", [ $filters["from"], $filters["to"] ]);
         });
 
         // Pricing Filter
         $query->when($filters["price"] ?? null, function() use ($query, $filters) {
-            $query->whereBetween("price", [ $filters["price"][0] ?? PHP_INT_MIN, $filters["price"][1] ?? PHP_INT_MAX ]);
+            $query->whereBetween("displayed_price", [ $filters["price"][0] ?? PHP_INT_MIN, $filters["price"][1] ?? PHP_INT_MAX ]);
         });
-        // Breed Filter
-        // $query->when($filters["breed"] ?? null, function ($q) use ($filters) {
-        //     if (is_array($filters["breed"]) && !empty($filters["breed"])) {
-        //         $q->whereIn("breed_id", $filters["breed"]);
-        //     } else {
-        //         $q->where("breed_id", $filters["breed"]);
-        //     }
-        // });
 
         $query->when($filters["breed"] ?? null, function($query) use ($filters) {
-            Log::info($filters["breed"]);
             $query->whereHas("breed", function($query) use($filters) {
                 if(is_array($filters["breed"])) {
                     $query->whereIn("id", $filters["breed"]);
@@ -86,23 +77,5 @@ class Animal extends Model
                 $query->where("gender", $filters["gender"]);
             }
         });
-        
-
-        // // Age Filter
-        // $query->when($filters["age"] ?? null, function() use ($query, $filters) {
-        //     if(is_array($filters["age"]) && !empty($filters["age"])) {
-        //         $query->whereIn("age_id", $filters["age"]);
-        //     } else {
-        //         $query->where("age_id", $filters["age"]);
-        //     }
-        // });
-
-        // $query->when(isset($filters["gender"]), function() use ($query, $filters) {
-        //     if(is_array($filters["gender"]) && !empty($filters["gender"])) {
-        //         $query->whereIn("gender", $filters["gender"]);
-        //     } else {
-        //         $query->where("gender", $filters["gender"]);
-        //     }
-        // });
     }
 }
